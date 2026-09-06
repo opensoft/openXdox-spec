@@ -1,0 +1,38 @@
+name: validate
+
+# The required check for this leg: parity with the assembly root's own
+# `validate` gate (same name, same triggers) — a pytest suite proving the leg
+# shape, plus (this leg only) a strict OpenSpec validation of the instance
+# under openspec/.
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: install pytest
+        run: python -m pip install pytest
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: install OpenSpec CLI
+        run: npm install -g @fission-ai/openspec@1.2.0
+
+      - name: openspec validate --all --strict
+        env:
+          OPENSPEC_TELEMETRY: '0'
+        run: openspec validate --all --strict
+
+      - name: pytest
+        run: python -m pytest -q
