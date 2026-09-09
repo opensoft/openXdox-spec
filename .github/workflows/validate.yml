@@ -4,10 +4,21 @@ name: validate
 # `validate` gate (same name, same triggers) — a pytest suite proving the leg
 # shape, plus (this leg only) a strict OpenSpec validation of the instance
 # under openspec/.
+#
+# Levelled against openDox-spec by the OQ-O scaffold-levelling pass
+# (openxFactory#656): same pinned pytest major, same least-privilege
+# `permissions:` block, same step ORDER — the OpenSpec CLI is installed before
+# pytest and `openspec validate` runs after it, because
+# tests/test_leg_shape.py's own test_openspec_validate_all_strict() shells out
+# to `openspec` and SKIPS when the CLI is not on PATH. Installing the CLI
+# first is what turns that test from a silent skip into real coverage.
 
 on:
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   validate:
@@ -19,8 +30,11 @@ jobs:
         with:
           python-version: '3.12'
 
+      # PINNED to a pytest MAJOR, levelled against openDox-code (OQ-O): an
+      # unpinned major is how a suite goes red for a reason that has nothing
+      # to do with the change under test.
       - name: install pytest
-        run: python -m pip install pytest
+        run: python -m pip install "pytest>=8,<9"
 
       - uses: actions/setup-node@v4
         with:
@@ -29,10 +43,10 @@ jobs:
       - name: install OpenSpec CLI
         run: npm install -g @fission-ai/openspec@1.2.0
 
+      - name: pytest
+        run: python -m pytest -q
+
       - name: openspec validate --all --strict
         env:
           OPENSPEC_TELEMETRY: '0'
         run: openspec validate --all --strict
-
-      - name: pytest
-        run: python -m pytest -q

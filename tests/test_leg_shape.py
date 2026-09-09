@@ -72,3 +72,18 @@ def test_openspec_validate_all_strict() -> None:
         f"openspec validate --all --strict exited {proc.returncode}\n"
         f"stdout:\n{proc.stdout}\nstderr:\n{proc.stderr}"
     )
+
+
+def test_branch_protection_evidence_exists() -> None:
+    # tasks.md § 1.5's evidence line: a ruleset is a repository SETTING, so
+    # the only thing a tree can assert is that the evidence file naming it is
+    # present. Levelled across all six repositories by the OQ-O pass
+    # (openxFactory#656).
+    assert (ROOT / "docs" / "branch-protection.md").is_file()
+
+
+def test_openspec_project_md_exists() -> None:
+    # The instance's own conventions file. openXdox-spec had no
+    # openspec/project.md until the OQ-O levelling pass (openxFactory#656);
+    # this test is what keeps both spec legs level from here on.
+    assert (ROOT / "openspec" / "project.md").is_file()
