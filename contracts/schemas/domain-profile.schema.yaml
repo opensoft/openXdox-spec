@@ -160,9 +160,29 @@ properties:
         label: {type: string, minLength: 1}
         description: {type: string}
         locations:
-          description: Where instances of this kind live, as repo-relative paths or globs.
+          description: >-
+            Where instances of this kind live, as repo-relative paths or globs.
+            A DISCOVERY convenience, never the classifier: globs overlap by
+            nature (`ideation/**/*.md` contains `ideation/cross-reference.md`),
+            so a path alone cannot say which kind governs an artifact. See
+            `claims_statuses`.
           type: array
           items: {type: string, minLength: 1}
+        claims_statuses:
+          description: >-
+            The statuses that BIND an artifact to this kind when its path
+            matches more than one kind's `locations`. The declared `Status:`
+            header is what actually decides governance — an artifact carrying
+            `projection` IS a projection whatever directory it sits in — and
+            leaving that to a glob would let a loader classify a projection as
+            an ordinary governance document and enforce an immutability point
+            that kind never had. Each status here MUST appear in this kind's
+            own `vocabulary`, and no status may be claimed by two kinds.
+            Optional: a kind whose `locations` overlap nothing, or which is the
+            default for the statuses it shares, claims none.
+          type: array
+          items: {type: string, minLength: 1}
+          uniqueItems: true
 
   # ---------------------------------------------------------------- AXIS 2
   lifecycle:
@@ -178,7 +198,16 @@ properties:
     items:
       type: object
       additionalProperties: false
-      required: [artifact_kind, vocabulary, transitions, immutability_point]
+      required:
+        - artifact_kind
+        - vocabulary
+        - transitions
+        - immutability_point
+        # REQUIRED, and an empty list is a real answer. Terminality is
+        # DECLARED rather than inferred from out-degree, so an omitted
+        # list is indistinguishable from "nobody wrote it down" — the
+        # permissive silence this schema refuses everywhere else.
+        - terminal_statuses
       properties:
 
         artifact_kind:
@@ -319,7 +348,15 @@ properties:
                 - cited-change
                 - appended-addendum
                 - regenerated
-            note: {type: string}
+            note:
+              description: >-
+                Why this kind's answer is what it is. REQUIRED and non-empty
+                for `regenerated`: a kind that never freezes records the
+                reason in the declaration rather than leaving a reader to
+                infer it from the status name. An empty string would satisfy
+                the conditional while saying nothing, so it does not validate.
+              type: string
+              minLength: 1
 
         transitions:
           description: >-
