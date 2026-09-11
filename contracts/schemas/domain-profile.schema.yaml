@@ -253,15 +253,18 @@ properties:
             `openxFactory#656` comment `5634195861`.
 
             DECLARED, never inferred from out-degree. Carrying no outgoing
-            transition is necessary but not sufficient: an OUT-OF-BAND status
-            usually has none and is still not terminal. openxFactory's `record`
-            is written once and thereafter only cited; its `projection` is
-            re-derived over the same path forever. Neither is FINISHED in the
-            sense the refusal means, so neither belongs in this list, and a
-            kind whose only status is `projection` declares an empty list
-            truthfully. Inferring the list from the transition graph instead
-            would have the engine refuse the regeneration that is the correct
-            act.
+            transition is necessary but not sufficient, and openxFactory's two
+            OUT-OF-BAND statuses split on exactly that. `record` is CAPTURED
+            once and IS finished: it is terminal, and "a revival is a NEW
+            record with a new id" is the right refusal for it. `projection` is
+            RE-DERIVED over the same path forever and is never finished: it is
+            NOT terminal, and a kind whose only status is `projection` declares
+            an EMPTY list truthfully. Moving a projection is still refused —
+            but by the closed transition list, "that is not a declared
+            transition", which is the accurate message. Inferring this list
+            from the transition graph would collapse the two, and would have
+            the engine call the regeneration that is the correct act the
+            editing of a finished record.
           type: array
           items: {type: string, minLength: 1}
           uniqueItems: true
