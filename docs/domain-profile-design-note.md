@@ -98,7 +98,8 @@ ninth, quoted verbatim with its column values from
 | `projection` | out of band | Deterministic RE-DERIVED rendering of a declared source of truth, rewritten in place by a named generator; never authoritative, never hand-edited, and not immutable — regenerating it is the correct act, not a violation |
 
 Its standing is promoted, not incidental: the requirement *"Controlled document
-status taxonomy"* at `openspec/specs/document-lifecycle/spec.md` lists all nine
+status taxonomy"* at `opensoft/openxFactory` `openspec/specs/document-lifecycle/spec.md`
+(`main` `38c076d1` — an EXTERNAL path; this repository carries no such file) lists all nine
 and rules that *"a document that a named generator RE-DERIVES IN PLACE from a
 declared source of truth SHALL carry `projection` rather than `record`"*,
 ratified by the archived `declare-generated-projection-status` (2026-08-28).
