@@ -1,0 +1,581 @@
+$schema: "https://json-schema.org/draft/2020-12/schema"
+$id: "domain-profile.schema.yaml"
+title: "Domain profile: the declaration the lifecycle engine is parameterized by"
+contract_schema_version: 1
+schema_version: 1
+kind: domain-profile-schema
+status: draft
+description: >-
+  DRAFT. The machine-readable form of a DOMAIN MAPPING DECLARATION — the one
+  artifact a `<Domainx>Dox` descendant actually contains, and the object the
+  neutral lifecycle engine reads instead of hardcoding one domain's words.
+
+  RULING C2 (`opensoft/openxFactory#656`, 2026-09-04T17:47Z): openXdox is the
+  domain-mapping core, PARAMETERIZED by a domain profile that a descendant
+  supplies — "a clinician using `MedxDox` never sees the word 'requirement'".
+  `split-opendox-two-layer-product` `tasks.md` § 4.4 states the consequence:
+  "The lifecycle engine reads its status vocabulary, transitions, authorities
+  and immutability point from a domain profile. A hardcoded status word is a
+  defect under `domain-mapping-declaration`."
+
+  The capability this realizes is `domain-mapping-declaration`, ADDED by that
+  change at openxFactory. Its FIRST requirement fixes the axis list at exactly
+  five — artifact kinds; lifecycle (vocabulary, transitions, authorities,
+  immutability point); acts and gates; evidence classes; promoting authorities
+  — and this schema does not extend it. Its SECOND requirement supplies two
+  refusals encoded structurally below rather than left to a reader: a
+  transition with no declared authority is REFUSED rather than defaulted to
+  "any actor" (`transitions[].authority` is required), and a vocabulary with
+  no declared immutability point is REFUSED rather than defaulted to "never"
+  (`lifecycle[].immutability_point` is required). "Both defaults are the
+  permissive answer to a question the domain was asked precisely because
+  permissiveness is unsafe." Its THIRD requirement supplies `truth_store`.
+
+  WHY `neutral: false` IS A CONST, NOT A BOOLEAN DEFAULT. A profile is by
+  construction one domain's words. The marker exists so that a file claiming
+  to be neutral can never be loaded as a profile — the exact failure the
+  capability names verbatim ("openxFactory's own vocabulary is treated as
+  neutral ... refused under RULING C2"). A profile that omits it is invalid;
+  a profile that sets it true is invalid.
+
+  RESOLVE BY ROLE, NOT BY STRING. Every status carries a `role` drawn from the
+  neutral lifecycle-state vocabulary, so the engine asks for "the status this
+  domain's documents carry while ORGANIZED" rather than for the string
+  `staged`. A domain spelling its organized status `triaged` then needs no
+  engine change. This is what makes the migration in the design note
+  (`docs/domain-profile-design-note.md` § 6) a parameterization rather than a
+  rename.
+
+  WHY `regenerated` IS AN `addenda` VALUE — THE PROJECTION CASE. The status
+  table this first profile reads carries NINE statuses, and the ninth,
+  `projection`, is declared NOT IMMUTABLE: a deterministic re-derived rendering
+  of a declared source of truth, "rewritten in place by a named generator",
+  where "regenerating it is the correct act, not a violation" (openxFactory
+  `docs/document-lifecycle.md`, `main` `38c076d1`). A kind whose artifacts are
+  re-derived that way has no status at which a record freezes. The capability
+  REFUSES to let the answer default — "a vocabulary with no declared
+  immutability point SHALL be refused rather than defaulted to 'never'" — so
+  the field stays REQUIRED and the honest answer is written INTO it rather
+  than omitted: the kind names its own out-of-band status and declares
+  `addenda: regenerated`, meaning the lawful later write is a regeneration by
+  the declared generator. The refusal stays intact (no kind may stay silent)
+  and a re-derived kind can still answer truthfully, in the one field built to
+  carry the answer. A `regenerated` immutability point MUST carry a `note`
+  recording WHY the kind never freezes — the reason is part of the
+  declaration, not something a reader infers. This is the one shape question
+  ASK-4 did not carry, and it arrives UNDER the ruled Q3: because v1 ENFORCES
+  the immutability point, an out-of-band re-derived status needs a DECLARED
+  exemption rather than a silent one, or the engine refuses a lawful
+  projection. Asked as Q6 on `openxFactory#656` after ASK-4's ruling; this
+  schema encodes Q6's recommended option — the exemption is a declared value
+  with a required reason, never an omission, so nothing about the refusal is
+  weakened — and is redrafted on any other ruling. The omission was caught by
+  the Copilot review on openXdox-spec #8 (review comment `3988822805`) and
+  retracted in `openxFactory#656` comment `5633989351`.
+
+  SEMANTIC INVARIANTS, NOT STRUCTURAL — WHAT THIS SCHEMA CANNOT CHECK. JSON
+  Schema constrains SHAPE. It cannot express that one value resolves against a
+  list elsewhere in the same document, so every REFERENTIAL rule this schema
+  states in prose is enforced by the loader that reads a profile, not by
+  validation against this file. Written down rather than left implicit,
+  because a description that promises a check nothing performs is exactly the
+  defect this profile family exists to remove. RULED Q1 puts the loader in the
+  right place: the YAML is canonical and a dataclass is the runtime form, so a
+  malformed profile is refused ONCE on the way in rather than at twenty call
+  sites. The loader SHALL refuse a profile that violates any of these:
+
+    - `lifecycle[].artifact_kind`, `transitions[].destination_kind` and
+      `acts[].target_kind` name an `artifact_kinds[].id`;
+    - `transitions[].authority` names an `authorities[].id`;
+    - `transitions[].act` names an `acts[].id`;
+    - `acts[].gate` names a `gates[].id` where `gates` is declared;
+    - `acts[].requires_evidence[]` names an `evidence_classes[].id`;
+    - `transitions[].from`/`to`, `terminal_statuses[]` and
+      `immutability_point.status` name a status in THAT kind's own
+      `vocabulary`;
+    - status ids are unique within a kind's vocabulary (`uniqueItems` compares
+      whole objects and does not give this);
+    - `artifact_kinds[].claims_statuses[]` names a status in THAT kind's own
+      vocabulary, and NO status is claimed by two kinds;
+    - no transition leaves a status declared in `terminal_statuses`;
+    - `immutability_point.addenda: regenerated` is used ONLY where the status
+      it names carries `role: out-of-band`. `regenerated` is the exemption for
+      a kind that is re-derived, and v1 ENFORCES the immutability point (RULED
+      Q3): a kind declaring `{status: ratified, addenda: regenerated}` would
+      otherwise satisfy this schema and walk out of ordinary immutability
+      through the exemption's door;
+    - at most one `artifact_kinds[]` entry sets `is_default: true`. A status
+      no kind's `claims_statuses` names resolves to that entry; two default
+      candidates would leave the same ambiguity `claims_statuses` exists to
+      close, only silently, for any status nobody thought to claim.
+
+  An id-keyed representation would let the schema constrain some of these
+  structurally at the cost of the ordered vocabulary this profile depends on;
+  it is a live option for the code half rather than a silent one.
+
+  DRAFT STATUS AND THE SHAPE QUESTIONS. ASK-4's five questions are RULED —
+  Brett Heap, `openxFactory#656` comment `5634195861`: "ASK-4: recommendations
+  on all five, proceed". This schema encodes those recommendations, so each is
+  now the RULED shape rather than a draft's preference. Q1 carriage (this YAML
+  is canonical; a dataclass is the runtime form); Q2 this schema lives at
+  openXdox-spec, the enforcement side;
+  Q3 v1 has the engine READ vocabulary and immutability point and only DECLARE
+  transitions and authorities — which is why nothing here is marked
+  "enforced"; Q4 `terminal_statuses` is per-kind, because
+  `("rejected","superseded")` at `gate_console.py:1151` are REGISTER-possible
+  states and not document statuses; Q5 the registration point is § 4.3's.
+
+type: object
+additionalProperties: false
+required:
+  - schema_version
+  - kind
+  - mapping_id
+  - neutral
+  - artifact_kinds
+  - lifecycle
+  - acts
+  - evidence_classes
+  - authorities
+  - truth_store
+
+properties:
+
+  schema_version:
+    const: 1
+
+  kind:
+    const: domain-profile
+
+  mapping_id:
+    description: >-
+      The domain mapping this profile declares, as a stable machine id — the
+      name a registration and a refusal message both use. The first instance is
+      `openxfactory-engineering`; a clinical descendant would be `medx-clinical`.
+    type: string
+    pattern: "^[a-z][a-z0-9-]*$"
+
+  domain_label:
+    description: Human-readable name of the domain this profile speaks for.
+    type: string
+    minLength: 1
+
+  declared_by:
+    description: >-
+      The repository that AUTHORS and registers this profile. Never a neutral
+      package: the neutral layer reads a profile and never contains one. For
+      the first instance this is `opensoft/openxFactory` — design.md § D3's
+      third column, kept there by RULING DQ-1.
+    type: string
+    minLength: 1
+
+  neutral:
+    description: >-
+      Always false. See the description block: the marker exists so a file
+      claiming neutrality cannot be loaded as a domain's profile.
+    const: false
+
+  basis:
+    description: >-
+      Where the declaration's content is READ FROM, so a reviewer can check a
+      row rather than trust it. Free-form citation lines.
+    type: array
+    minItems: 1
+    items: {type: string, minLength: 1}
+
+  # ---------------------------------------------------------------- AXIS 1
+  artifact_kinds:
+    description: >-
+      AXIS 1. The typed things this domain works on. A kind id is what every
+      other axis refers to — `lifecycle[].artifact_kind`, an act's `target`,
+      a transition destination kind.
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [id, label]
+      properties:
+        id: {type: string, pattern: "^[a-z][a-z0-9-]*$"}
+        label: {type: string, minLength: 1}
+        description: {type: string}
+        locations:
+          description: >-
+            Where instances of this kind live, as repo-relative paths or globs.
+            A DISCOVERY convenience, never the classifier: globs overlap by
+            nature (`ideation/**/*.md` contains `ideation/cross-reference.md`),
+            so a path alone cannot say which kind governs an artifact. See
+            `claims_statuses`.
+          type: array
+          items: {type: string, minLength: 1}
+        claims_statuses:
+          description: >-
+            The statuses that BIND an artifact to this kind when its path
+            matches more than one kind's `locations`. The declared `Status:`
+            header is what actually decides governance — an artifact carrying
+            `projection` IS a projection whatever directory it sits in — and
+            leaving that to a glob would let a loader classify a projection as
+            an ordinary governance document and enforce an immutability point
+            that kind never had. Each status here MUST appear in this kind's
+            own `vocabulary`, and no status may be claimed by two kinds.
+            Optional: a kind whose `locations` overlap nothing claims none.
+            A kind marked `is_default: true` (below) also claims none — that
+            marker, not an omitted `claims_statuses`, is what makes it the
+            fallback; an omission on its own says nothing about who wins.
+            BOTH invariants above are SEMANTIC — cross-kind uniqueness and
+            vocabulary membership are not expressible here, and `uniqueItems`
+            only rules out a repeat inside one list. The loader enforces
+            them; see "SEMANTIC INVARIANTS, NOT STRUCTURAL" in the top-level
+            description.
+          type: array
+          items: {type: string, minLength: 1}
+          uniqueItems: true
+        is_default:
+          description: >-
+            Marks this kind as the FALLBACK for any status no kind's
+            `claims_statuses` names — the resolution `claims_statuses`'s own
+            description points at rather than leaves to "the kind whose
+            `locations` happen to be the broadest". At most ONE entry in
+            `artifact_kinds` may set this true; the loader refuses a profile
+            declaring it twice, closing the ambiguity a reader could
+            otherwise hit if two overlapping kinds both simply omitted
+            `claims_statuses`. Optional, and absent everywhere is a legal
+            profile too — it only matters where `locations` overlap at all.
+          const: true
+
+  # ---------------------------------------------------------------- AXIS 2
+  lifecycle:
+    description: >-
+      AXIS 2, one entry per artifact kind. The capability's second requirement
+      is the whole of this axis: "the closed status vocabulary; every legal
+      transition as an ordered pair; the AUTHORITY each transition requires,
+      named as a role the declaration's authority axis also carries; and the
+      status at which the record becomes immutable, with addenda as the only
+      lawful later writes."
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required:
+        - artifact_kind
+        - vocabulary
+        - transitions
+        - immutability_point
+        # REQUIRED, and an empty list is a real answer. Terminality is
+        # DECLARED rather than inferred from out-degree, so an omitted
+        # list is indistinguishable from "nobody wrote it down" — the
+        # permissive silence this schema refuses everywhere else.
+        - terminal_statuses
+      properties:
+
+        artifact_kind:
+          description: An `artifact_kinds[].id`.
+          type: string
+          pattern: "^[a-z][a-z0-9-]*$"
+
+        vocabulary:
+          description: >-
+            The CLOSED status vocabulary, ORDERED — spine order, so a renderer
+            has a stable axis without inventing one. A status outside this list
+            appearing on an artifact is reported against the declaration rather
+            than silently accepted (capability scenario "A status outside the
+            closed vocabulary appears"). `id` is the domain's word; `role` is
+            the neutral lifecycle state the engine resolves BY.
+          type: array
+          # ONE is legal. The example's `evidence-record` kind has exactly one
+          # status (`record`): a record is written as a record and never moves.
+          # A `minItems: 2` here read as "a vocabulary is a journey", which the
+          # profile's own first instance disproved on its first validation run.
+          minItems: 1
+          items:
+            type: object
+            additionalProperties: false
+            required: [id, role]
+            properties:
+              id:
+                description: The domain's own word, as it appears on an artifact.
+                type: string
+                minLength: 1
+              role:
+                description: >-
+                  The neutral lifecycle state this word occupies. The engine
+                  asks for the ROLE. `other` is legal but carries no engine
+                  behaviour — a status the engine must act on needs a real role.
+                enum:
+                  - captured
+                  - organized
+                  - proposed
+                  - ratified
+                  - promoted
+                  - superseded
+                  - retired
+                  - out-of-band
+                  - other
+              label: {type: string}
+              meaning: {type: string}
+              contradiction_legal:
+                description: >-
+                  Whether content in this status may contradict other content.
+                  Declared rather than encoded in the engine: openxFactory's
+                  `brainstorm` is the only status under which it is legal.
+                type: boolean
+                default: false
+              excluded_from_conversion:
+                description: >-
+                  Whether artifacts in this status are excluded from
+                  prose-to-spec conversion and contradiction checks
+                  (openxFactory's `record`).
+                type: boolean
+                default: false
+          # Status ids are unique within a kind's vocabulary.
+          uniqueItems: true
+
+        terminal_statuses:
+          description: >-
+            Statuses at which an artifact is FINISHED. Declared rather than
+            discovered, because the engine's refusal message differs: a
+            terminal state is not "you lack authority", it is "this record is
+            finished; a revival is a NEW record with a new id"
+            (`gate_console.py:1151`). RULED per KIND — ASK-4 Q4,
+            `openxFactory#656` comment `5634195861`.
+
+            DECLARED, never inferred from out-degree. Carrying no outgoing
+            transition is necessary but not sufficient, and openxFactory's two
+            OUT-OF-BAND statuses split on exactly that. `record` is CAPTURED
+            once and IS finished: it is terminal, and "a revival is a NEW
+            record with a new id" is the right refusal for it. `projection` is
+            RE-DERIVED over the same path forever and is never finished: it is
+            NOT terminal, and a kind whose only status is `projection` declares
+            an EMPTY list truthfully. Moving a projection is still refused —
+            but by the closed transition list, "that is not a declared
+            transition", which is the accurate message. Inferring this list
+            from the transition graph would collapse the two, and would have
+            the engine call the regeneration that is the correct act the
+            editing of a finished record.
+          type: array
+          items: {type: string, minLength: 1}
+          uniqueItems: true
+
+        immutability_point:
+          description: >-
+            REQUIRED, never defaulted. The status at or past which the record
+            becomes immutable and addenda are the only lawful later writes. Per
+            KIND rather than per profile, because one domain can honestly have
+            more than one answer — openxFactory's documents become immutable at
+            `ratified` (later change travels through a cited OpenSpec change),
+            its evidence records are immutable at `record` (an error is
+            corrected by a SEPARATE document), and its projections never freeze
+            at all (`addenda: regenerated`). A single scalar for the profile
+            would have forced two of those three to be a lie.
+
+            A kind that NEVER freezes still declares this field. It names its
+            own out-of-band status and `addenda: regenerated`, and records the
+            reason in `note` — required for that value by the conditional
+            below. See the top-level description, "WHY `regenerated` IS AN
+            `addenda` VALUE".
+          type: object
+          additionalProperties: false
+          required: [status, addenda]
+          # A `regenerated` immutability point is the one answer that says a
+          # kind never freezes. It is legal, and it is the only one that must
+          # say WHY in the declaration itself rather than leave a reader to
+          # infer it from the status name.
+          if:
+            properties:
+              addenda: {const: regenerated}
+            required: [addenda]
+          then:
+            required: [status, addenda, note]
+          properties:
+            status:
+              description: A status id from this kind's `vocabulary`.
+              type: string
+              minLength: 1
+            addenda:
+              description: >-
+                How a lawful later write is made. `separate-document` = an
+                erratum or successor file; `cited-change` = an amendment
+                carried by a governance change; `appended-addendum` = an
+                append-only section on the record itself; `regenerated` = the
+                artifact is RE-DERIVED in place by its declared generator, so
+                the kind never becomes immutable and re-running the generator
+                over the same path is the CORRECT act rather than a violation
+                (openxFactory's `projection`). `regenerated` requires a
+                non-empty `note`, and is legal ONLY on a status whose `role` is
+                `out-of-band` — a SEMANTIC invariant, since the role lives on
+                the vocabulary entry this field only names. It is the exemption
+                for a re-derived kind, never a way for a kind that does freeze
+                to declare that it does not.
+              enum:
+                - separate-document
+                - cited-change
+                - appended-addendum
+                - regenerated
+            note:
+              description: >-
+                Why this kind's answer is what it is. REQUIRED and non-empty
+                for `regenerated`: a kind that never freezes records the
+                reason in the declaration rather than leaving a reader to
+                infer it from the status name. An empty string would satisfy
+                the conditional while saying nothing, so it does not validate.
+              type: string
+              minLength: 1
+
+        transitions:
+          description: >-
+            Every LEGAL transition, as an ordered pair with the authority it
+            requires. A transition absent here is not legal; a transition
+            present without an authority is refused by this schema rather than
+            treated as open to any actor.
+          type: array
+          minItems: 1
+          items:
+            type: object
+            additionalProperties: false
+            required: [from, to, authority]
+            properties:
+              from:
+                description: >-
+                  A status id from this kind's `vocabulary`, or `null` for an
+                  ENTRY transition — a record written straight into a status
+                  without travelling the spine (openxFactory's `record`).
+                type: ["string", "null"]
+              to:
+                description: A status id from this kind's `vocabulary`.
+                type: string
+                minLength: 1
+              authority:
+                description: >-
+                  An `authorities[].id`. REQUIRED — the capability's refusal.
+                type: string
+                pattern: "^[a-z][a-z0-9-]*$"
+              act:
+                description: >-
+                  The `acts[].id` that performs this transition, when one does.
+                  A transition with no act is one a human makes by editing.
+                type: string
+                pattern: "^[a-z][a-z0-9-]*$"
+              destination_kind:
+                description: >-
+                  The artifact kind the record BECOMES, when a transition moves
+                  it between kinds rather than between statuses — openxFactory's
+                  demote returns a change to a staging topic, which is what
+                  `gate_console.py:968` and `:1651` hardcode as
+                  `"kind": "staged"`.
+                type: string
+                pattern: "^[a-z][a-z0-9-]*$"
+              basis: {type: string}
+              reverse_of:
+                description: >-
+                  Names the forward transition this one reverses, for a
+                  mechanized reverse move (openxFactory's `demote`, D16).
+                type: string
+
+  # ---------------------------------------------------------------- AXIS 3
+  acts:
+    description: >-
+      AXIS 3. The domain's verbs and the GATE each passes. The profile names
+      the gate; it does not restate the gate's own per-act conditionals, which
+      stay in the gate's schema.
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [id, gate]
+      properties:
+        id: {type: string, pattern: "^[a-z][a-z0-9-]*$"}
+        label: {type: string}
+        gate:
+          description: A `gates[].id`, or a gate name this domain declares inline.
+          type: string
+          minLength: 1
+        target_kind:
+          description: An `artifact_kinds[].id` the act operates on.
+          type: string
+        requires_evidence:
+          description: >-
+            `evidence_classes[].id` values this act's record MUST cite.
+          type: array
+          items: {type: string, minLength: 1}
+
+  gates:
+    description: >-
+      The gates acts pass, declared once and referenced by id. Optional: a
+      domain whose acts all pass one gate may name it inline on each act.
+    type: array
+    items:
+      type: object
+      additionalProperties: false
+      required: [id, actor_class]
+      properties:
+        id: {type: string, pattern: "^[a-z][a-z0-9-]*$"}
+        label: {type: string}
+        actor_class:
+          description: >-
+            WHO may pass this gate. `human` means an agent is structurally
+            unable to pass it — openxFactory's gate console refuses an
+            agent-invoked action before a record is ever written.
+          enum: [human, agent, either, machine]
+        description: {type: string}
+
+  # ---------------------------------------------------------------- AXIS 4
+  evidence_classes:
+    description: >-
+      AXIS 4. What a derived statement in this domain must cite. The engine
+      reads the class list; whether a given act requires a given class is
+      `acts[].requires_evidence`.
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [id]
+      properties:
+        id: {type: string, pattern: "^[a-z][a-z0-9-]*$"}
+        label: {type: string}
+        description: {type: string}
+
+  # ---------------------------------------------------------------- AXIS 5
+  authorities:
+    description: >-
+      AXIS 5. The promoting authorities, "named as roles rather than as
+      people". Every `transitions[].authority` resolves here.
+    type: array
+    minItems: 1
+    items:
+      type: object
+      additionalProperties: false
+      required: [id, label]
+      properties:
+        id: {type: string, pattern: "^[a-z][a-z0-9-]*$"}
+        label: {type: string, minLength: 1}
+        description: {type: string}
+        human_only:
+          description: >-
+            Whether this role may only be held by a human actor.
+          type: boolean
+          default: false
+
+  truth_store:
+    description: >-
+      The capability's THIRD requirement: the store this domain's derived
+      models may never write, and the external enforcement point it sits
+      behind. "A derived-model family declared with no named truth store SHALL
+      be refused, because governed-derived-model's constitutional invariant
+      that a model is non-authoritative by construction is unenforceable when
+      nothing names what it is non-authoritative ABOUT." For an engineering
+      domain the spec names it itself: the repository and its branch
+      protection.
+    type: object
+    additionalProperties: false
+    required: [name, external_enforcement_point]
+    properties:
+      name: {type: string, minLength: 1}
+      external_enforcement_point: {type: string, minLength: 1}
+      description: {type: string}
+
+  notes:
+    type: array
+    items: {type: string}
