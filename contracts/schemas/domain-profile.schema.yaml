@@ -245,12 +245,23 @@ properties:
 
         terminal_statuses:
           description: >-
-            Statuses from which no transition leaves. Declared rather than
+            Statuses at which an artifact is FINISHED. Declared rather than
             discovered, because the engine's refusal message differs: a
             terminal state is not "you lack authority", it is "this record is
             finished; a revival is a NEW record with a new id"
-            (`gate_console.py:1151`). ASK-4 Q4 is whether this field is the
-            right home for that check; the draft says yes, per kind.
+            (`gate_console.py:1151`). RULED per KIND — ASK-4 Q4,
+            `openxFactory#656` comment `5634195861`.
+
+            DECLARED, never inferred from out-degree. Carrying no outgoing
+            transition is necessary but not sufficient: an OUT-OF-BAND status
+            usually has none and is still not terminal. openxFactory's `record`
+            is written once and thereafter only cited; its `projection` is
+            re-derived over the same path forever. Neither is FINISHED in the
+            sense the refusal means, so neither belongs in this list, and a
+            kind whose only status is `projection` declares an empty list
+            truthfully. Inferring the list from the transition graph instead
+            would have the engine refuse the regeneration that is the correct
+            act.
           type: array
           items: {type: string, minLength: 1}
           uniqueItems: true
