@@ -56,14 +56,20 @@ the two busiest carved modules. Re-swept live for this note:
 
 That is the ten the register records (`openxFactory#656` comment
 `5628886636`: *"4.4's hardcoded status literals are now 10 across
-`gate_console.py` / `generator.py`"*). **The re-sweep finds six more of the same
-class that the count of ten does not include**, all of the word `draft`:
-`gate_console.py:167` (`DRAFT_STATUS = "draft"`), `:826`, `:1012`, `:1339`
-(twice on the line), `:1487`, `:1569`. They are not a new defect — they are the
-same defect, one status word further along — and § 4.4's code half must migrate
-them on the same accessor or it will leave half a vocabulary hardcoded. This
-note therefore scopes **sixteen sites over two constants and two terminal
-words**, and says so rather than ticking a box against a stale count.
+`gate_console.py` / `generator.py`"*) — **ten sites over nine lines**, line
+`1151` carrying two of them. Confirmed at current line numbers.
+
+**The re-sweep finds six more LINES the count of ten does not include**, all of
+the word `draft`: `gate_console.py:167` (`DRAFT_STATUS = "draft"`), `:826`,
+`:1012`, `:1339` (which carries it twice), `:1487`, `:1569` — seven more
+occurrences. They are not a new defect; they are the same defect, one status
+word further along, and § 4.4's code half must migrate them on the same
+accessor or it will leave half a vocabulary hardcoded.
+
+Counted once and stated unambiguously, because the code half will work from
+this number: **seventeen occurrences over fifteen lines**, across two module
+constants (`STAGED_STATUS`, `DRAFT_STATUS`), two inline `"kind": "staged"`
+literals, two in `generator.py`, and the two terminal words at `:1151`.
 
 These words are `openxFactory`'s OWN `Status:` taxonomy
 (`openxFactory/docs/document-lifecycle.md`, `Status: standard`), living inside
