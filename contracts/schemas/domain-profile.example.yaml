@@ -340,7 +340,9 @@ notes:
     5633989351. Sources for the ninth row: opensoft/openxFactory main 38c076d1
     docs/document-lifecycle.md line 49 (the controlled table) and the promoted
     requirement "Controlled document status taxonomy" at
-    openspec/specs/document-lifecycle/spec.md, whose `projection` standing was
+    opensoft/openxFactory openspec/specs/document-lifecycle/spec.md at main
+    38c076d1 — an EXTERNAL path, not one in this repository — whose
+    `projection` standing was
     ratified by the archived declare-generated-projection-status (2026-08-28).
   - >-
     `locations` OVERLAP, and that is why `claims_statuses` exists.
@@ -366,10 +368,10 @@ notes:
     empty list. Moving a projection is still refused — by the closed transition
     list rather than by a finished-record message.
   - >-
-    `terminal_statuses` on `governance-document` is `[superseded, retired]`.
-    The `("rejected", "superseded")` pair hardcoded at
-    `openXdox-code gate_console.py:1151` is a REGISTER-POSSIBLE vocabulary,
-    not a document one — which is exactly why ASK-4 Q4 asks whether
-    `terminal_statuses` is per-kind. This example answers yes and would gain a
-    fifth artifact kind (`register-possible`) when the register's own
-    vocabulary is declared.
+    `terminal_statuses` on `governance-document` is
+    `[superseded, retired, record]`. The `("rejected", "superseded")` pair
+    hardcoded at `openXdox-code gate_console.py:1151` is a REGISTER-POSSIBLE
+    vocabulary, not a document one — which is why ASK-4 Q4 asked whether
+    `terminal_statuses` is per-kind. RULED per kind (openxFactory#656 comment
+    5634195861), and this example would gain a SIXTH artifact kind
+    (`register-possible`) when the register's own vocabulary is declared.
