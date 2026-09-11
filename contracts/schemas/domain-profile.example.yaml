@@ -59,6 +59,9 @@ artifact_kinds:
       ONCE, immutable on write; excluded from prose-to-spec conversion and
       contradiction checks.
     locations: ["health/", "review/", "ideation/dashboard/gate-records/"]
+    # `review/**/*.md` is also governance-document's. The STATUS decides, not
+    # the path: an artifact carrying `record` is an evidence record.
+    claims_statuses: [record]
   - id: projection-document
     label: "Projection document"
     description: >-
@@ -72,6 +75,11 @@ artifact_kinds:
       `scripts/render-ideation-cross-reference.py`, which the document's own
       header names alongside its source revision.
     locations: ["ideation/cross-reference.md"]
+    # `ideation/**/*.md` is also governance-document's, and it CONTAINS this
+    # path. Without the binding a loader could classify the projection as an
+    # ordinary governance document and enforce `immutability_point: ratified`
+    # on an artifact whose whole nature is being rewritten.
+    claims_statuses: [projection]
 
 # ------------------------------------------------------------------- AXIS 2
 lifecycle:
@@ -334,6 +342,15 @@ notes:
     requirement "Controlled document status taxonomy" at
     openspec/specs/document-lifecycle/spec.md, whose `projection` standing was
     ratified by the archived declare-generated-projection-status (2026-08-28).
+  - >-
+    `locations` OVERLAP, and that is why `claims_statuses` exists.
+    governance-document's `ideation/**/*.md` contains projection-document's
+    `ideation/cross-reference.md`, and its `review/**/*.md` contains
+    evidence-record's `review/`. A path cannot decide which kind governs an
+    artifact; the declared `Status:` header can, and does — which is the same
+    principle as the rest of this profile, declare rather than infer. The two
+    out-of-band kinds claim their own status; governance-document claims none
+    and is the default for the seven spine statuses.
   - >-
     The two OUT-OF-BAND statuses split on `terminal_statuses`, and the split is
     the reason terminality is DECLARED here rather than inferred from the
