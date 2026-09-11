@@ -166,7 +166,11 @@ properties:
             closed vocabulary appears"). `id` is the domain's word; `role` is
             the neutral lifecycle state the engine resolves BY.
           type: array
-          minItems: 2
+          # ONE is legal. The example's `evidence-record` kind has exactly one
+          # status (`record`): a record is written as a record and never moves.
+          # A `minItems: 2` here read as "a vocabulary is a journey", which the
+          # profile's own first instance disproved on its first validation run.
+          minItems: 1
           items:
             type: object
             additionalProperties: false
