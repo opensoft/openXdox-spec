@@ -57,6 +57,7 @@ three, a conformance verdict reserved to a canonical validator.
   named `promoting_authority`
 - AND it re-derives no conformance judgement reserved to the canonical
   validator (`scripts/validate-derived-models.py`)
-- AND the binding assembles through the § 2.4 seam beside the other three
-  route-extension columns without collision
+- AND the binding assembles through the § 2.4 seam beside the gate,
+  projection route, role-authority, and evidence-and-provenance columns
+  without collision
 
