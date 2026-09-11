@@ -41,7 +41,7 @@ description: >-
   resolved grouping from the SNAPSHOT, never from a second list.
 
   VALIDATOR-SIDE RULES this shape cannot express (enforced by
-  `scripts/validate-ideation-dashboard-contracts.py`, and these comments ARE the
+  opensoft/openXdox-code's `scripts/validate-ideation-dashboard-contracts.py`, and these comments ARE the
   requirements):
     * every (repository, ref) pair is UNIQUE within one index — two entries for
       the same pair make "which snapshot is this repository's?" ambiguous; and

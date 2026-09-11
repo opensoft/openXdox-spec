@@ -105,7 +105,7 @@ $defs:
   # --- shared vocabularies ---
   lifecycle_status:
     type: string
-    # The controlled `Status:` header vocabulary (docs/document-lifecycle.md).
+    # The controlled `Status:` header vocabulary (openxFactory's docs/document-lifecycle.md).
     # Tracks `doc_health.TAXONOMY`; a value outside this enum fails snapshot
     # validation, so the two move in the same change.
     enum: [brainstorm, staged, draft, ratified, standard, superseded, retired, record, projection]
