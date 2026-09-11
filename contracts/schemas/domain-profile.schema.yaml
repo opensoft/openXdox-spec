@@ -97,7 +97,13 @@ description: >-
       whole objects and does not give this);
     - `artifact_kinds[].claims_statuses[]` names a status in THAT kind's own
       vocabulary, and NO status is claimed by two kinds;
-    - no transition leaves a status declared in `terminal_statuses`.
+    - no transition leaves a status declared in `terminal_statuses`;
+    - `immutability_point.addenda: regenerated` is used ONLY where the status
+      it names carries `role: out-of-band`. `regenerated` is the exemption for
+      a kind that is re-derived, and v1 ENFORCES the immutability point (RULED
+      Q3): a kind declaring `{status: ratified, addenda: regenerated}` would
+      otherwise satisfy this schema and walk out of ordinary immutability
+      through the exemption's door.
 
   An id-keyed representation would let the schema constrain some of these
   structurally at the cost of the ordered vocabulary this profile depends on;
@@ -376,7 +382,12 @@ properties:
                 artifact is RE-DERIVED in place by its declared generator, so
                 the kind never becomes immutable and re-running the generator
                 over the same path is the CORRECT act rather than a violation
-                (openxFactory's `projection`). `regenerated` requires `note`.
+                (openxFactory's `projection`). `regenerated` requires a
+                non-empty `note`, and is legal ONLY on a status whose `role` is
+                `out-of-band` — a SEMANTIC invariant, since the role lives on
+                the vocabulary entry this field only names. It is the exemption
+                for a re-derived kind, never a way for a kind that does freeze
+                to declare that it does not.
               enum:
                 - separate-document
                 - cited-change
