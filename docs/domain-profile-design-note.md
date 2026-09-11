@@ -328,6 +328,15 @@ be authored by the same hand:
   nothing in the neutral packages — the operational contract the ruling says is
   documented in the runbook. `openXdox-code` and `openDox-code` never import
   `openxFactory`; the direction the carve removed stays removed.
+- **the REFERENTIAL refusals, performed here and nowhere else.** JSON Schema
+  constrains shape and cannot express that one value resolves against a list
+  elsewhere in the same document, so every cross-axis rule the schema states —
+  an authority that resolves, a status inside its own kind's vocabulary, a
+  claimed status claimed by exactly one kind, no transition leaving a terminal
+  status — is the loader's to enforce. The schema lists them under "SEMANTIC
+  INVARIANTS, NOT STRUCTURAL". RULED Q1 is what makes this the right place:
+  the YAML is canonical and the dataclass is the runtime form, so a malformed
+  profile is refused ONCE on the way in rather than at twenty call sites.
 
 **Refusal, not a default.** When no profile is registered the engine refuses.
 It does not fall back to the words it used to hardcode — a fallback is how the
