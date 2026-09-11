@@ -7,7 +7,7 @@ Reference examples for the ideation-area dashboard contract schemas under
 sibling schemas from tasks 2.6/2.8). These are static reference material, not
 runtime state — see `../README.md` for the placement policy this directory
 follows. The strict validator is
-`scripts/validate-ideation-dashboard-contracts.py`; running it with no argument
+opensoft/openXdox-code's `scripts/validate-ideation-dashboard-contracts.py`; running it with no argument
 self-tests every file here (valid pass, each negative fails for its intended
 reason, each transition pair matches its declared expectation) and then scans
 the checkout for real instances and committed workbench manifests.
@@ -204,8 +204,8 @@ exercised here without a `contract_schema_version` bump:
   `ai-derived` to human-authored in place (a possible's origin is fixed).
 
 The one-way disposition lifecycle and the derived-entry shape rules are enforced
-by `scripts/validate-ideation-dashboard-contracts.py` (the C3 delegated register
-validator); `scripts/validate-ideation-cross-reference.py` delegates them, not
+by opensoft/openXdox-code's `scripts/validate-ideation-dashboard-contracts.py` (the C3 delegated register
+validator); openxFactory's `scripts/validate-ideation-cross-reference.py` delegates them, not
 duplicating the checks.
 
 ## Branch sessions (add-workbench-branch-sessions)
@@ -299,7 +299,7 @@ behavior, task 3.8), so there is deliberately no negative for it.
 
 ```bash
 # Self-test all fixtures + scan the checkout for real instances / committed manifests:
-python3 scripts/validate-ideation-dashboard-contracts.py
+python3 opensoft/openXdox-code/scripts/validate-ideation-dashboard-contracts.py
 
 # …and the same sweep with warnings treated as errors. It PASSES over this
 # directory again as of contract-v3.0, and the history is worth stating because
@@ -315,14 +315,14 @@ python3 scripts/validate-ideation-dashboard-contracts.py
 # the removal at contract-v3.0; the fixtures went with the family and the
 # warnings with them. Use `--strict` to FIND deprecated and otherwise-warned
 # shapes; it no longer refuses this directory for that reason:
-python3 scripts/validate-ideation-dashboard-contracts.py --strict
+python3 opensoft/openXdox-code/scripts/validate-ideation-dashboard-contracts.py --strict
 
 # One file (kind auto-detected):
-python3 scripts/validate-ideation-dashboard-contracts.py \
+python3 opensoft/openXdox-code/scripts/validate-ideation-dashboard-contracts.py \
     examples/ideation-dashboard/ideation-dashboard-snapshot.example.yaml
 
 # Register transition legality:
-python3 scripts/validate-ideation-dashboard-contracts.py --transition \
+python3 opensoft/openXdox-code/scripts/validate-ideation-dashboard-contracts.py --transition \
     examples/ideation-dashboard/transitions/valid-pick-and-reject.before.yaml \
     examples/ideation-dashboard/transitions/valid-pick-and-reject.after.yaml
 ```
