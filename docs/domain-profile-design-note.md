@@ -166,9 +166,13 @@ contains the evidence records — so a path cannot say which kind governs an
 artifact, and a loader that guessed from the path could enforce
 `immutability_point: ratified` on a projection whose whole nature is being
 rewritten. Each out-of-band kind therefore CLAIMS its own status
-(`claims_statuses`), and `governance-document` claims none: it is the default
-for the seven spine statuses. Declared rather than inferred, like everything
-else on this axis.
+(`claims_statuses`), and `governance-document` is marked `is_default: true`
+instead: the schema caps that marker at one entry, so the seven spine
+statuses resolve to it rather than to whichever overlapping kind a reader
+guessed was the catch-all. Declared rather than inferred, like everything
+else on this axis — an omitted `claims_statuses` alone never meant "this one
+is the default", only "this one claims nothing yet", and two kinds could
+have said that at once.
 
 ### 3.2 Lifecycle — the closed vocabulary
 

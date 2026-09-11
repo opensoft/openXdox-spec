@@ -103,7 +103,11 @@ description: >-
       a kind that is re-derived, and v1 ENFORCES the immutability point (RULED
       Q3): a kind declaring `{status: ratified, addenda: regenerated}` would
       otherwise satisfy this schema and walk out of ordinary immutability
-      through the exemption's door.
+      through the exemption's door;
+    - at most one `artifact_kinds[]` entry sets `is_default: true`. A status
+      no kind's `claims_statuses` names resolves to that entry; two default
+      candidates would leave the same ambiguity `claims_statuses` exists to
+      close, only silently, for any status nobody thought to claim.
 
   An id-keyed representation would let the schema constrain some of these
   structurally at the cost of the ordered vocabulary this profile depends on;
@@ -214,15 +218,30 @@ properties:
             an ordinary governance document and enforce an immutability point
             that kind never had. Each status here MUST appear in this kind's
             own `vocabulary`, and no status may be claimed by two kinds.
-            Optional: a kind whose `locations` overlap nothing, or which is the
-            default for the statuses it shares, claims none. BOTH invariants
-            above are SEMANTIC — cross-kind uniqueness and vocabulary
-            membership are not expressible here, and `uniqueItems` only rules
-            out a repeat inside one list. The loader enforces them; see "SEMANTIC
-            INVARIANTS, NOT STRUCTURAL" in the top-level description.
+            Optional: a kind whose `locations` overlap nothing claims none.
+            A kind marked `is_default: true` (below) also claims none — that
+            marker, not an omitted `claims_statuses`, is what makes it the
+            fallback; an omission on its own says nothing about who wins.
+            BOTH invariants above are SEMANTIC — cross-kind uniqueness and
+            vocabulary membership are not expressible here, and `uniqueItems`
+            only rules out a repeat inside one list. The loader enforces
+            them; see "SEMANTIC INVARIANTS, NOT STRUCTURAL" in the top-level
+            description.
           type: array
           items: {type: string, minLength: 1}
           uniqueItems: true
+        is_default:
+          description: >-
+            Marks this kind as the FALLBACK for any status no kind's
+            `claims_statuses` names — the resolution `claims_statuses`'s own
+            description points at rather than leaves to "the kind whose
+            `locations` happen to be the broadest". At most ONE entry in
+            `artifact_kinds` may set this true; the loader refuses a profile
+            declaring it twice, closing the ambiguity a reader could
+            otherwise hit if two overlapping kinds both simply omitted
+            `claims_statuses`. Optional, and absent everywhere is a legal
+            profile too — it only matters where `locations` overlap at all.
+          const: true
 
   # ---------------------------------------------------------------- AXIS 2
   lifecycle:

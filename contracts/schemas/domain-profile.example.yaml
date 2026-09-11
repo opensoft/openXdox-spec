@@ -42,6 +42,7 @@ artifact_kinds:
       A prose document carrying the controlled `Status:` header. The thing the
       lifecycle spine is written for.
     locations: ["docs/**/*.md", "ideation/**/*.md", "review/**/*.md"]
+    is_default: true
   - id: staging-topic
     label: "Staging topic"
     description: >-
