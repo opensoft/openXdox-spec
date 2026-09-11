@@ -46,10 +46,39 @@ description: >-
   (`docs/domain-profile-design-note.md` § 6) a parameterization rather than a
   rename.
 
-  DRAFT STATUS AND THE OPEN QUESTIONS. This schema encodes the RECOMMENDED
-  option of each ASK-4 question posted on `openxFactory#656`; it is redrafted
-  on any other ruling. Q1 carriage (this YAML is canonical; a dataclass is the
-  runtime form); Q2 this schema lives at openXdox-spec, the enforcement side;
+  WHY `regenerated` IS AN `addenda` VALUE — THE PROJECTION CASE. The status
+  table this first profile reads carries NINE statuses, and the ninth,
+  `projection`, is declared NOT IMMUTABLE: a deterministic re-derived rendering
+  of a declared source of truth, "rewritten in place by a named generator",
+  where "regenerating it is the correct act, not a violation" (openxFactory
+  `docs/document-lifecycle.md`, `main` `38c076d1`). A kind whose artifacts are
+  re-derived that way has no status at which a record freezes. The capability
+  REFUSES to let the answer default — "a vocabulary with no declared
+  immutability point SHALL be refused rather than defaulted to 'never'" — so
+  the field stays REQUIRED and the honest answer is written INTO it rather
+  than omitted: the kind names its own out-of-band status and declares
+  `addenda: regenerated`, meaning the lawful later write is a regeneration by
+  the declared generator. The refusal stays intact (no kind may stay silent)
+  and a re-derived kind can still answer truthfully, in the one field built to
+  carry the answer. A `regenerated` immutability point MUST carry a `note`
+  recording WHY the kind never freezes — the reason is part of the
+  declaration, not something a reader infers. This is the one shape question
+  ASK-4 did not carry, and it arrives UNDER the ruled Q3: because v1 ENFORCES
+  the immutability point, an out-of-band re-derived status needs a DECLARED
+  exemption rather than a silent one, or the engine refuses a lawful
+  projection. Asked as Q6 on `openxFactory#656` after ASK-4's ruling; this
+  schema encodes Q6's recommended option — the exemption is a declared value
+  with a required reason, never an omission, so nothing about the refusal is
+  weakened — and is redrafted on any other ruling. The omission was caught by
+  the Copilot review on openXdox-spec #8 (review comment `3988822805`) and
+  retracted in `openxFactory#656` comment `5633989351`.
+
+  DRAFT STATUS AND THE SHAPE QUESTIONS. ASK-4's five questions are RULED —
+  Brett Heap, `openxFactory#656` comment `5634195861`: "ASK-4: recommendations
+  on all five, proceed". This schema encodes those recommendations, so each is
+  now the RULED shape rather than a draft's preference. Q1 carriage (this YAML
+  is canonical; a dataclass is the runtime form); Q2 this schema lives at
+  openXdox-spec, the enforcement side;
   Q3 v1 has the engine READ vocabulary and immutability point and only DECLARE
   transitions and authorities — which is why nothing here is marked
   "enforced"; Q4 `terminal_statuses` is per-kind, because
@@ -231,14 +260,31 @@ properties:
             REQUIRED, never defaulted. The status at or past which the record
             becomes immutable and addenda are the only lawful later writes. Per
             KIND rather than per profile, because one domain can honestly have
-            two answers — openxFactory's documents become immutable at
-            `ratified` (later change travels through a cited OpenSpec change)
-            while its evidence records are immutable at `record` (an error is
-            corrected by a SEPARATE document). A single scalar for the profile
-            would have forced one of those to be a lie.
+            more than one answer — openxFactory's documents become immutable at
+            `ratified` (later change travels through a cited OpenSpec change),
+            its evidence records are immutable at `record` (an error is
+            corrected by a SEPARATE document), and its projections never freeze
+            at all (`addenda: regenerated`). A single scalar for the profile
+            would have forced two of those three to be a lie.
+
+            A kind that NEVER freezes still declares this field. It names its
+            own out-of-band status and `addenda: regenerated`, and records the
+            reason in `note` — required for that value by the conditional
+            below. See the top-level description, "WHY `regenerated` IS AN
+            `addenda` VALUE".
           type: object
           additionalProperties: false
           required: [status, addenda]
+          # A `regenerated` immutability point is the one answer that says a
+          # kind never freezes. It is legal, and it is the only one that must
+          # say WHY in the declaration itself rather than leave a reader to
+          # infer it from the status name.
+          if:
+            properties:
+              addenda: {const: regenerated}
+            required: [addenda]
+          then:
+            required: [status, addenda, note]
           properties:
             status:
               description: A status id from this kind's `vocabulary`.
@@ -249,8 +295,16 @@ properties:
                 How a lawful later write is made. `separate-document` = an
                 erratum or successor file; `cited-change` = an amendment
                 carried by a governance change; `appended-addendum` = an
-                append-only section on the record itself.
-              enum: [separate-document, cited-change, appended-addendum]
+                append-only section on the record itself; `regenerated` = the
+                artifact is RE-DERIVED in place by its declared generator, so
+                the kind never becomes immutable and re-running the generator
+                over the same path is the CORRECT act rather than a violation
+                (openxFactory's `projection`). `regenerated` requires `note`.
+              enum:
+                - separate-document
+                - cited-change
+                - appended-addendum
+                - regenerated
             note: {type: string}
 
         transitions:
