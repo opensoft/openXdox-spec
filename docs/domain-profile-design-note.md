@@ -159,6 +159,16 @@ the REAL instance is authored at `openxFactory` in the code half.
 | `evidence-record` | a generated report, simulation or audit, CAPTURED once | `review/`, `health/`, gate records |
 | `projection-document` | a document a named generator RE-DERIVES in place from a declared source | `ideation/cross-reference.md` |
 
+**Locations discover; the STATUS classifies.** These globs overlap —
+`ideation/**/*.md` contains `ideation/cross-reference.md`, `review/**/*.md`
+contains the evidence records — so a path cannot say which kind governs an
+artifact, and a loader that guessed from the path could enforce
+`immutability_point: ratified` on a projection whose whole nature is being
+rewritten. Each out-of-band kind therefore CLAIMS its own status
+(`claims_statuses`), and `governance-document` claims none: it is the default
+for the seven spine statuses. Declared rather than inferred, like everything
+else on this axis.
+
 ### 3.2 Lifecycle — the closed vocabulary
 
 Nine words: `brainstorm`, `staged`, `draft`, `ratified`, `standard`,
