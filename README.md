@@ -49,6 +49,7 @@ adds it — the xFactory family's standing rule, levelled across all six
 | document | what it is |
 |---|---|
 | [docs/branch-protection.md](docs/branch-protection.md) | the repository ruleset that makes `validate` a required status check on `main`, its `evaluate` → `active` history, and the one policy difference between the two families |
+| [docs/domain-profile-design-note.md](docs/domain-profile-design-note.md) | `Status: draft` — the shape of the DOMAIN PROFILE the lifecycle engine reads instead of hardcoding one domain's status words (RULING C2, `split-opendox-two-layer-product` § 4.4): the five declaration axes, openxFactory's own engineering vocabulary as the worked example, the RULED lazy-proxy reach, and the per-site migration table the code half follows |
 | [docs/stale-citations-erratum-2026-09-10.md](docs/stale-citations-erratum-2026-09-10.md) | BUILD-arc record: the source-path citations the carve left stale in the arrived examples README and two schemas, and their live targets, without editing the frozen files |
 
 `openspec/project.md` is not a document in this sense — it is this leg's
