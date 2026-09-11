@@ -73,6 +73,36 @@ description: >-
   the Copilot review on openXdox-spec #8 (review comment `3988822805`) and
   retracted in `openxFactory#656` comment `5633989351`.
 
+  SEMANTIC INVARIANTS, NOT STRUCTURAL — WHAT THIS SCHEMA CANNOT CHECK. JSON
+  Schema constrains SHAPE. It cannot express that one value resolves against a
+  list elsewhere in the same document, so every REFERENTIAL rule this schema
+  states in prose is enforced by the loader that reads a profile, not by
+  validation against this file. Written down rather than left implicit,
+  because a description that promises a check nothing performs is exactly the
+  defect this profile family exists to remove. RULED Q1 puts the loader in the
+  right place: the YAML is canonical and a dataclass is the runtime form, so a
+  malformed profile is refused ONCE on the way in rather than at twenty call
+  sites. The loader SHALL refuse a profile that violates any of these:
+
+    - `lifecycle[].artifact_kind`, `transitions[].destination_kind` and
+      `acts[].target_kind` name an `artifact_kinds[].id`;
+    - `transitions[].authority` names an `authorities[].id`;
+    - `transitions[].act` names an `acts[].id`;
+    - `acts[].gate` names a `gates[].id` where `gates` is declared;
+    - `acts[].requires_evidence[]` names an `evidence_classes[].id`;
+    - `transitions[].from`/`to`, `terminal_statuses[]` and
+      `immutability_point.status` name a status in THAT kind's own
+      `vocabulary`;
+    - status ids are unique within a kind's vocabulary (`uniqueItems` compares
+      whole objects and does not give this);
+    - `artifact_kinds[].claims_statuses[]` names a status in THAT kind's own
+      vocabulary, and NO status is claimed by two kinds;
+    - no transition leaves a status declared in `terminal_statuses`.
+
+  An id-keyed representation would let the schema constrain some of these
+  structurally at the cost of the ordered vocabulary this profile depends on;
+  it is a live option for the code half rather than a silent one.
+
   DRAFT STATUS AND THE SHAPE QUESTIONS. ASK-4's five questions are RULED —
   Brett Heap, `openxFactory#656` comment `5634195861`: "ASK-4: recommendations
   on all five, proceed". This schema encodes those recommendations, so each is
@@ -179,7 +209,11 @@ properties:
             that kind never had. Each status here MUST appear in this kind's
             own `vocabulary`, and no status may be claimed by two kinds.
             Optional: a kind whose `locations` overlap nothing, or which is the
-            default for the statuses it shares, claims none.
+            default for the statuses it shares, claims none. BOTH invariants
+            above are SEMANTIC — cross-kind uniqueness and vocabulary
+            membership are not expressible here, and `uniqueItems` only rules
+            out a repeat inside one list. The loader enforces them; see "SEMANTIC
+            INVARIANTS, NOT STRUCTURAL" in the top-level description.
           type: array
           items: {type: string, minLength: 1}
           uniqueItems: true
