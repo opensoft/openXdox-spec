@@ -16,7 +16,8 @@ Topics: openxdox, domain-mapping-declaration, lifecycle, ruling-c2
 > profile instance is authored by it, and the schema beside it
 > (`contracts/schemas/domain-profile.schema.yaml`) is a DRAFT whose open shape
 > questions are listed in § 8 and asked of Brett Heap as ASK-4 on
-> `opensoft/openxFactory#656`. The code half — `gate_console.py` /
+> `opensoft/openxFactory#656` (comment `5633855878`; the lane's CLAIM is
+> comment `5633760341`). The code half — `gate_console.py` /
 > `generator.py` at `opensoft/openXdox-code`, and the first concrete profile
 > instance at `opensoft/openxFactory` — is RULED to start only after BUILD
 > slice 2b lands, because it touches the same files
@@ -329,9 +330,10 @@ the schema carries a `role:` per status.
 
 ## 8. Open questions — ASK-4
 
-Asked of Brett Heap on `openxFactory#656` in multi-choice form; the schema
-beside this note encodes the RECOMMENDED option in each case and is redrafted on
-any other ruling.
+Asked of Brett Heap on `openxFactory#656` in multi-choice form, comment
+`5633855878`; the schema beside this note encodes the RECOMMENDED option in each
+case and is redrafted on any other ruling. The full options and their trade-offs
+are on that comment; the headlines are:
 
 - **Q1 — carriage.** YAML loaded via the lazy proxy / a Python dataclass built
   by `openxFactory`'s adapter / both, YAML canonical and the dataclass the
