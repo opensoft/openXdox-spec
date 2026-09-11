@@ -46,10 +46,79 @@ description: >-
   (`docs/domain-profile-design-note.md` § 6) a parameterization rather than a
   rename.
 
-  DRAFT STATUS AND THE OPEN QUESTIONS. This schema encodes the RECOMMENDED
-  option of each ASK-4 question posted on `openxFactory#656`; it is redrafted
-  on any other ruling. Q1 carriage (this YAML is canonical; a dataclass is the
-  runtime form); Q2 this schema lives at openXdox-spec, the enforcement side;
+  WHY `regenerated` IS AN `addenda` VALUE — THE PROJECTION CASE. The status
+  table this first profile reads carries NINE statuses, and the ninth,
+  `projection`, is declared NOT IMMUTABLE: a deterministic re-derived rendering
+  of a declared source of truth, "rewritten in place by a named generator",
+  where "regenerating it is the correct act, not a violation" (openxFactory
+  `docs/document-lifecycle.md`, `main` `38c076d1`). A kind whose artifacts are
+  re-derived that way has no status at which a record freezes. The capability
+  REFUSES to let the answer default — "a vocabulary with no declared
+  immutability point SHALL be refused rather than defaulted to 'never'" — so
+  the field stays REQUIRED and the honest answer is written INTO it rather
+  than omitted: the kind names its own out-of-band status and declares
+  `addenda: regenerated`, meaning the lawful later write is a regeneration by
+  the declared generator. The refusal stays intact (no kind may stay silent)
+  and a re-derived kind can still answer truthfully, in the one field built to
+  carry the answer. A `regenerated` immutability point MUST carry a `note`
+  recording WHY the kind never freezes — the reason is part of the
+  declaration, not something a reader infers. This is the one shape question
+  ASK-4 did not carry, and it arrives UNDER the ruled Q3: because v1 ENFORCES
+  the immutability point, an out-of-band re-derived status needs a DECLARED
+  exemption rather than a silent one, or the engine refuses a lawful
+  projection. Asked as Q6 on `openxFactory#656` after ASK-4's ruling; this
+  schema encodes Q6's recommended option — the exemption is a declared value
+  with a required reason, never an omission, so nothing about the refusal is
+  weakened — and is redrafted on any other ruling. The omission was caught by
+  the Copilot review on openXdox-spec #8 (review comment `3988822805`) and
+  retracted in `openxFactory#656` comment `5633989351`.
+
+  SEMANTIC INVARIANTS, NOT STRUCTURAL — WHAT THIS SCHEMA CANNOT CHECK. JSON
+  Schema constrains SHAPE. It cannot express that one value resolves against a
+  list elsewhere in the same document, so every REFERENTIAL rule this schema
+  states in prose is enforced by the loader that reads a profile, not by
+  validation against this file. Written down rather than left implicit,
+  because a description that promises a check nothing performs is exactly the
+  defect this profile family exists to remove. RULED Q1 puts the loader in the
+  right place: the YAML is canonical and a dataclass is the runtime form, so a
+  malformed profile is refused ONCE on the way in rather than at twenty call
+  sites. The loader SHALL refuse a profile that violates any of these:
+
+    - `lifecycle[].artifact_kind`, `transitions[].destination_kind` and
+      `acts[].target_kind` name an `artifact_kinds[].id`;
+    - `transitions[].authority` names an `authorities[].id`;
+    - `transitions[].act` names an `acts[].id`;
+    - `acts[].gate` names a `gates[].id` where `gates` is declared;
+    - `acts[].requires_evidence[]` names an `evidence_classes[].id`;
+    - `transitions[].from`/`to`, `terminal_statuses[]` and
+      `immutability_point.status` name a status in THAT kind's own
+      `vocabulary`;
+    - status ids are unique within a kind's vocabulary (`uniqueItems` compares
+      whole objects and does not give this);
+    - `artifact_kinds[].claims_statuses[]` names a status in THAT kind's own
+      vocabulary, and NO status is claimed by two kinds;
+    - no transition leaves a status declared in `terminal_statuses`;
+    - `immutability_point.addenda: regenerated` is used ONLY where the status
+      it names carries `role: out-of-band`. `regenerated` is the exemption for
+      a kind that is re-derived, and v1 ENFORCES the immutability point (RULED
+      Q3): a kind declaring `{status: ratified, addenda: regenerated}` would
+      otherwise satisfy this schema and walk out of ordinary immutability
+      through the exemption's door;
+    - at most one `artifact_kinds[]` entry sets `is_default: true`. A status
+      no kind's `claims_statuses` names resolves to that entry; two default
+      candidates would leave the same ambiguity `claims_statuses` exists to
+      close, only silently, for any status nobody thought to claim.
+
+  An id-keyed representation would let the schema constrain some of these
+  structurally at the cost of the ordered vocabulary this profile depends on;
+  it is a live option for the code half rather than a silent one.
+
+  DRAFT STATUS AND THE SHAPE QUESTIONS. ASK-4's five questions are RULED —
+  Brett Heap, `openxFactory#656` comment `5634195861`: "ASK-4: recommendations
+  on all five, proceed". This schema encodes those recommendations, so each is
+  now the RULED shape rather than a draft's preference. Q1 carriage (this YAML
+  is canonical; a dataclass is the runtime form); Q2 this schema lives at
+  openXdox-spec, the enforcement side;
   Q3 v1 has the engine READ vocabulary and immutability point and only DECLARE
   transitions and authorities — which is why nothing here is marked
   "enforced"; Q4 `terminal_statuses` is per-kind, because
@@ -131,9 +200,48 @@ properties:
         label: {type: string, minLength: 1}
         description: {type: string}
         locations:
-          description: Where instances of this kind live, as repo-relative paths or globs.
+          description: >-
+            Where instances of this kind live, as repo-relative paths or globs.
+            A DISCOVERY convenience, never the classifier: globs overlap by
+            nature (`ideation/**/*.md` contains `ideation/cross-reference.md`),
+            so a path alone cannot say which kind governs an artifact. See
+            `claims_statuses`.
           type: array
           items: {type: string, minLength: 1}
+        claims_statuses:
+          description: >-
+            The statuses that BIND an artifact to this kind when its path
+            matches more than one kind's `locations`. The declared `Status:`
+            header is what actually decides governance — an artifact carrying
+            `projection` IS a projection whatever directory it sits in — and
+            leaving that to a glob would let a loader classify a projection as
+            an ordinary governance document and enforce an immutability point
+            that kind never had. Each status here MUST appear in this kind's
+            own `vocabulary`, and no status may be claimed by two kinds.
+            Optional: a kind whose `locations` overlap nothing claims none.
+            A kind marked `is_default: true` (below) also claims none — that
+            marker, not an omitted `claims_statuses`, is what makes it the
+            fallback; an omission on its own says nothing about who wins.
+            BOTH invariants above are SEMANTIC — cross-kind uniqueness and
+            vocabulary membership are not expressible here, and `uniqueItems`
+            only rules out a repeat inside one list. The loader enforces
+            them; see "SEMANTIC INVARIANTS, NOT STRUCTURAL" in the top-level
+            description.
+          type: array
+          items: {type: string, minLength: 1}
+          uniqueItems: true
+        is_default:
+          description: >-
+            Marks this kind as the FALLBACK for any status no kind's
+            `claims_statuses` names — the resolution `claims_statuses`'s own
+            description points at rather than leaves to "the kind whose
+            `locations` happen to be the broadest". At most ONE entry in
+            `artifact_kinds` may set this true; the loader refuses a profile
+            declaring it twice, closing the ambiguity a reader could
+            otherwise hit if two overlapping kinds both simply omitted
+            `claims_statuses`. Optional, and absent everywhere is a legal
+            profile too — it only matters where `locations` overlap at all.
+          const: true
 
   # ---------------------------------------------------------------- AXIS 2
   lifecycle:
@@ -149,7 +257,16 @@ properties:
     items:
       type: object
       additionalProperties: false
-      required: [artifact_kind, vocabulary, transitions, immutability_point]
+      required:
+        - artifact_kind
+        - vocabulary
+        - transitions
+        - immutability_point
+        # REQUIRED, and an empty list is a real answer. Terminality is
+        # DECLARED rather than inferred from out-degree, so an omitted
+        # list is indistinguishable from "nobody wrote it down" — the
+        # permissive silence this schema refuses everywhere else.
+        - terminal_statuses
       properties:
 
         artifact_kind:
@@ -216,12 +333,26 @@ properties:
 
         terminal_statuses:
           description: >-
-            Statuses from which no transition leaves. Declared rather than
+            Statuses at which an artifact is FINISHED. Declared rather than
             discovered, because the engine's refusal message differs: a
             terminal state is not "you lack authority", it is "this record is
             finished; a revival is a NEW record with a new id"
-            (`gate_console.py:1151`). ASK-4 Q4 is whether this field is the
-            right home for that check; the draft says yes, per kind.
+            (`gate_console.py:1151`). RULED per KIND — ASK-4 Q4,
+            `openxFactory#656` comment `5634195861`.
+
+            DECLARED, never inferred from out-degree. Carrying no outgoing
+            transition is necessary but not sufficient, and openxFactory's two
+            OUT-OF-BAND statuses split on exactly that. `record` is CAPTURED
+            once and IS finished: it is terminal, and "a revival is a NEW
+            record with a new id" is the right refusal for it. `projection` is
+            RE-DERIVED over the same path forever and is never finished: it is
+            NOT terminal, and a kind whose only status is `projection` declares
+            an EMPTY list truthfully. Moving a projection is still refused —
+            but by the closed transition list, "that is not a declared
+            transition", which is the accurate message. Inferring this list
+            from the transition graph would collapse the two, and would have
+            the engine call the regeneration that is the correct act the
+            editing of a finished record.
           type: array
           items: {type: string, minLength: 1}
           uniqueItems: true
@@ -231,14 +362,31 @@ properties:
             REQUIRED, never defaulted. The status at or past which the record
             becomes immutable and addenda are the only lawful later writes. Per
             KIND rather than per profile, because one domain can honestly have
-            two answers — openxFactory's documents become immutable at
-            `ratified` (later change travels through a cited OpenSpec change)
-            while its evidence records are immutable at `record` (an error is
-            corrected by a SEPARATE document). A single scalar for the profile
-            would have forced one of those to be a lie.
+            more than one answer — openxFactory's documents become immutable at
+            `ratified` (later change travels through a cited OpenSpec change),
+            its evidence records are immutable at `record` (an error is
+            corrected by a SEPARATE document), and its projections never freeze
+            at all (`addenda: regenerated`). A single scalar for the profile
+            would have forced two of those three to be a lie.
+
+            A kind that NEVER freezes still declares this field. It names its
+            own out-of-band status and `addenda: regenerated`, and records the
+            reason in `note` — required for that value by the conditional
+            below. See the top-level description, "WHY `regenerated` IS AN
+            `addenda` VALUE".
           type: object
           additionalProperties: false
           required: [status, addenda]
+          # A `regenerated` immutability point is the one answer that says a
+          # kind never freezes. It is legal, and it is the only one that must
+          # say WHY in the declaration itself rather than leave a reader to
+          # infer it from the status name.
+          if:
+            properties:
+              addenda: {const: regenerated}
+            required: [addenda]
+          then:
+            required: [status, addenda, note]
           properties:
             status:
               description: A status id from this kind's `vocabulary`.
@@ -249,9 +397,30 @@ properties:
                 How a lawful later write is made. `separate-document` = an
                 erratum or successor file; `cited-change` = an amendment
                 carried by a governance change; `appended-addendum` = an
-                append-only section on the record itself.
-              enum: [separate-document, cited-change, appended-addendum]
-            note: {type: string}
+                append-only section on the record itself; `regenerated` = the
+                artifact is RE-DERIVED in place by its declared generator, so
+                the kind never becomes immutable and re-running the generator
+                over the same path is the CORRECT act rather than a violation
+                (openxFactory's `projection`). `regenerated` requires a
+                non-empty `note`, and is legal ONLY on a status whose `role` is
+                `out-of-band` — a SEMANTIC invariant, since the role lives on
+                the vocabulary entry this field only names. It is the exemption
+                for a re-derived kind, never a way for a kind that does freeze
+                to declare that it does not.
+              enum:
+                - separate-document
+                - cited-change
+                - appended-addendum
+                - regenerated
+            note:
+              description: >-
+                Why this kind's answer is what it is. REQUIRED and non-empty
+                for `regenerated`: a kind that never freezes records the
+                reason in the declaration rather than leaving a reader to
+                infer it from the status name. An empty string would satisfy
+                the conditional while saying nothing, so it does not validate.
+              type: string
+              minLength: 1
 
         transitions:
           description: >-

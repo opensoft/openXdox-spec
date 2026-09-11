@@ -14,10 +14,12 @@ Topics: openxdox, domain-mapping-declaration, lifecycle, ruling-c2
 
 > **This note designs; it does not build.** No engine code changes with it, no
 > profile instance is authored by it, and the schema beside it
-> (`contracts/schemas/domain-profile.schema.yaml`) is a DRAFT whose open shape
-> questions are listed in § 8 and asked of Brett Heap as ASK-4 on
-> `opensoft/openxFactory#656` (comment `5633855878`; the lane's CLAIM is
-> comment `5633760341`). The code half — `gate_console.py` /
+> (`contracts/schemas/domain-profile.schema.yaml`) is a DRAFT whose shape
+> questions are listed in § 8. ASK-4's five are RULED — Brett Heap,
+> `opensoft/openxFactory#656` comment `5634195861`, *"ASK-4: recommendations on
+> all five, proceed"* (asked as comment `5633855878`; the lane's CLAIM is
+> comment `5633760341`); Q6 is asked and open. **§ 9 records a correction to
+> this note.** The code half — `gate_console.py` /
 > `generator.py` at `opensoft/openXdox-code`, and the first concrete profile
 > instance at `opensoft/openxFactory` — is RULED to start only after BUILD
 > slice 2b lands, because it touches the same files
@@ -82,13 +84,29 @@ capability names:
 >   neutral layer rather than in the engineering descendant's declaration
 > - **THEN** the placement is refused under RULING C2
 
-**A discrepancy this note records rather than resolves.** The packet and this
-repository's own CLAUDE.md both call it the "nine-word" taxonomy, and both then
-list eight words. `document-lifecycle.md`'s controlled table carries **eight**
+**Nine words, and the ninth is the interesting one.** The scenario's
+"nine-word" is exact. `document-lifecycle.md`'s controlled table carries NINE
 rows — `brainstorm | staged | draft | ratified | standard | superseded |
-retired | record`. The profile below declares the eight the live table carries.
-The phrase "nine-word" is a citation defect somewhere upstream, not a ninth
-status; it is flagged here for the register and is not this slice's to fix.
+retired | record | projection` — and the profile below declares all nine. The
+ninth, quoted verbatim with its column values from
+[`opensoft/openxFactory`](https://github.com/opensoft/openxFactory) `main`
+`38c076d1`, `docs/document-lifecycle.md` line 49 (the file last moved at
+`823ee6ce`):
+
+| Status | Lifecycle state | Meaning |
+| --- | --- | --- |
+| `projection` | out of band | Deterministic RE-DERIVED rendering of a declared source of truth, rewritten in place by a named generator; never authoritative, never hand-edited, and not immutable — regenerating it is the correct act, not a violation |
+
+Its standing is promoted, not incidental: the requirement *"Controlled document
+status taxonomy"* at `opensoft/openxFactory` `openspec/specs/document-lifecycle/spec.md`
+(`main` `38c076d1` — an EXTERNAL path; this repository carries no such file) lists all nine
+and rules that *"a document that a named generator RE-DERIVES IN PLACE from a
+declared source of truth SHALL carry `projection` rather than `record`"*,
+ratified by the archived `declare-generated-projection-status` (2026-08-28).
+
+**An earlier revision of this note said the opposite** — that the table carried
+eight and that "nine-word" was an upstream citation defect. That finding was
+FALSE, read from a stale local checkout, and is retracted; see § 9.
 
 **What the fix is NOT.** Per RULED OQ-3 (`#656` comment `5547107565`),
 `document-lifecycle` stays `openxFactory`'s vocabulary, *"exposed through its
@@ -139,14 +157,39 @@ the REAL instance is authored at `openxFactory` in the code half.
 | `governance-document` | a governance doc carrying the controlled `Status:` header | `docs/`, `ideation/` |
 | `staging-topic` | a feat-spec-shaped fragment in the work queue | `ideation/staging/<topic>/` |
 | `openspec-change` | an active proposal (proposal / tasks / design / spec deltas) | `openspec/changes/<id>/` |
-| `evidence-record` | a generated report, simulation or audit | `review/`, `health/`, gate records |
+| `evidence-record` | a generated report, simulation or audit, CAPTURED once | `review/`, `health/`, gate records |
+| `projection-document` | a document a named generator RE-DERIVES in place from a declared source | `ideation/cross-reference.md` |
+
+**Locations discover; the STATUS classifies.** These globs overlap —
+`ideation/**/*.md` contains `ideation/cross-reference.md`, `review/**/*.md`
+contains the evidence records — so a path cannot say which kind governs an
+artifact, and a loader that guessed from the path could enforce
+`immutability_point: ratified` on a projection whose whole nature is being
+rewritten. Each out-of-band kind therefore CLAIMS its own status
+(`claims_statuses`), and `governance-document` is marked `is_default: true`
+instead: the schema caps that marker at one entry, so the seven spine
+statuses resolve to it rather than to whichever overlapping kind a reader
+guessed was the catch-all. Declared rather than inferred, like everything
+else on this axis — an omitted `claims_statuses` alone never meant "this one
+is the default", only "this one claims nothing yet", and two kinds could
+have said that at once.
 
 ### 3.2 Lifecycle — the closed vocabulary
 
-`brainstorm`, `staged`, `draft`, `ratified`, `standard`, `superseded`,
-`retired`, `record` (`document-lifecycle.md` § "Status", the controlled table).
-The vocabulary is ORDERED in the profile, spine order, so a renderer has a
-stable axis without inventing one.
+Nine words: `brainstorm`, `staged`, `draft`, `ratified`, `standard`,
+`superseded`, `retired`, `record`, `projection` (`document-lifecycle.md`
+§ "Document Status Taxonomy", the controlled table, at `main` `38c076d1`). The
+vocabulary is ORDERED in the profile, spine order, so a renderer has a stable
+axis without inventing one.
+
+The last two are OUT OF BAND: they do not travel the spine, and they are
+distinguished from each other by ONE test, which the source states as a rule —
+*"Being generated is not what makes a document a `record`; being CAPTURED is."*
+A `record` is captured once. A `projection` is re-derived in place, and *"the
+test is whether re-running the generator over the same path is the CORRECT
+act"*. Each therefore gets its own artifact kind in the profile, because the
+two differ on exactly the thing the lifecycle axis has to declare — where the
+artifact becomes immutable (§ 3.4).
 
 ### 3.3 Lifecycle — transitions and the authority each requires
 
@@ -166,10 +209,22 @@ Rules". Authorities are role names the profile's authority axis also carries.
 | `ratified` → `retired` | `ratifying-authority` | *"Withdrawn; header names the reason or decision record"* |
 | `standard` → `retired` | `ratifying-authority` | same |
 | → `record` | `evidence-producer` | out of band; a record is WRITTEN as a record and does not travel the spine |
+| → `projection` | `projection-generator` | out of band; *"a re-derived projection carries `projection`"* at the proposal gate, and the generator EMITS that status itself. No transition leaves it — a projection is regenerated, which changes no status |
 
 `brainstorm` is the only status under which contradiction is legal, and
-`record` is excluded from prose-to-spec conversion and contradiction checks —
-both are declared as per-status flags rather than encoded in the engine.
+`record` and `projection` are both excluded from prose-to-spec conversion and
+contradiction checks — all declared as per-status flags rather than encoded in
+the engine.
+
+**Terminality is declared, not inferred.** `record` and `projection` both have
+zero outgoing transitions and they are NOT the same case. Terminal means
+FINISHED — the engine's refusal is *"this record is finished; a revival is a
+NEW record with a new id"* (`gate_console.py:1151`). A captured record is
+finished, so `record` is terminal. A projection is rewritten forever, so it is
+not; moving one is still refused, but by the closed transition list ("that is
+not a declared transition"), which is the accurate message. Inferring the list
+from out-degree would collapse the two and make the regeneration that is the
+correct act read as the editing of a finished record.
 
 ### 3.4 Lifecycle — the immutability point
 
@@ -187,6 +242,23 @@ scalar would be a lie:
   [docs/stale-citations-erratum-2026-09-10.md](stale-citations-erratum-2026-09-10.md)
   is precisely that addendum, written *"without mutating the frozen,
   byte-identical documents"*.
+- `projection-document`: **`projection`, with `addenda: regenerated` — it never
+  freezes.** A projection holds no captured state for immutability to protect:
+  re-running the generator over the same path is the only correct way to update
+  it, and *"reporting each regeneration as a content edit to a record would
+  make the correct act a critical finding"*. The lawful later write IS the
+  regeneration, by the generator the document names. What is fixed is the
+  SOURCE: the projection is never authoritative over what it renders, so a
+  correction is made in the source and re-derived, never typed into the
+  projection.
+
+**A never-immutable kind still declares the field, and that is the point.** The
+capability refuses to let this answer default — *"a vocabulary with no declared
+immutability point SHALL be refused rather than defaulted to 'never'"* — and
+under RULED Q3 v1 ENFORCES the immutability point, so a lawful projection needs
+a DECLARED exemption or the engine refuses it. `addenda: regenerated` is that
+declaration: one enum value, the note required with it, and no kind permitted
+to stay silent. The alternatives considered and their costs are Q6 (§ 8).
 
 ### 3.5 Acts and gates
 
@@ -214,7 +286,9 @@ per-action requirements: `ratification-record` (required by `ratify`),
 ### 3.7 Promoting authorities, and the truth store
 
 Roles, not people: `lane-author`, `change-author`, `gate-actor` (human-only),
-`ratifying-authority`, `promoting-authority`, `evidence-producer`. The truth
+`ratifying-authority`, `promoting-authority`, `evidence-producer`,
+`projection-generator` (a machine by construction, and never an authority over
+what it renders — a projection is a rendering, not a claim). The truth
 store the engineering domain's derived models may never write is **the
 repository and its branch protection** — named by the capability's third
 requirement itself — with the external enforcement point being the repository
@@ -258,6 +332,15 @@ be authored by the same hand:
   nothing in the neutral packages — the operational contract the ruling says is
   documented in the runbook. `openXdox-code` and `openDox-code` never import
   `openxFactory`; the direction the carve removed stays removed.
+- **the REFERENTIAL refusals, performed here and nowhere else.** JSON Schema
+  constrains shape and cannot express that one value resolves against a list
+  elsewhere in the same document, so every cross-axis rule the schema states —
+  an authority that resolves, a status inside its own kind's vocabulary, a
+  claimed status claimed by exactly one kind, no transition leaving a terminal
+  status — is the loader's to enforce. The schema lists them under "SEMANTIC
+  INVARIANTS, NOT STRUCTURAL". RULED Q1 is what makes this the right place:
+  the YAML is canonical and the dataclass is the runtime form, so a malformed
+  profile is refused ONCE on the way in rather than at twenty call sites.
 
 **Refusal, not a default.** When no profile is registered the engine refuses.
 It does not fall back to the words it used to hardcode — a fallback is how the
@@ -322,34 +405,100 @@ the schema carries a `role:` per status.
   trigger is named — `MedxDox`.
 - **The § 4.3 registration point** (routes and subcommands). Same ruled
   mechanism, different payload; this note names only what the engine reads.
-- **Enforcing transitions at runtime.** See § 8 Q3 — an open question, not a
-  silent decision.
-- **Correcting the "nine-word" citation** upstream (§ 1).
+- **Enforcing transitions at runtime.** RULED Q3: declared only in v1.
 
 ---
 
-## 8. Open questions — ASK-4
+## 8. Shape questions — ASK-4 (RULED) and Q6 (open)
 
-Asked of Brett Heap on `openxFactory#656` in multi-choice form, comment
-`5633855878`; the schema beside this note encodes the RECOMMENDED option in each
-case and is redrafted on any other ruling. The full options and their trade-offs
-are on that comment; the headlines are:
+**ASK-4 is RULED.** Brett Heap, `openxFactory#656` comment `5634195861`:
+*"ASK-4: recommendations on all five, proceed"*. The five were asked in
+multi-choice form as comment `5633855878`; the schema beside this note already
+encoded the recommended option in each case, so each is now the RULED shape
+rather than a draft's preference, and no redraft is owed. The full options and
+their trade-offs are on the asking comment; the headlines, with the ruling:
 
 - **Q1 — carriage.** YAML loaded via the lazy proxy / a Python dataclass built
   by `openxFactory`'s adapter / both, YAML canonical and the dataclass the
-  runtime form. *Recommended: both.*
+  runtime form. **RULED: both.**
 - **Q2 — where the schema lives.** `openXdox-spec` (the enforcement side, this
   draft) / the `openxFactory` packet's `contracts/schemas/`.
-  *Recommended: here.*
+  **RULED: here.**
 - **Q3 — enforcement depth in v1.** Vocabulary + immutability point read and
   enforced now, transitions and authorities DECLARED only / everything enforced
-  at once / vocabulary only. *Recommended: the first.*
+  at once / vocabulary only. **RULED: the first** — the engine READS and
+  enforces vocabulary and immutability point; transitions and authorities
+  are declared only.
 - **Q4 — `terminal_statuses`.** Whether `("rejected", "superseded")` at
   `gate_console.py:1151` becomes a declared axis field, and on which
   vocabulary — those two words are REGISTER-possible states, not document
   statuses, so the profile may need a second, per-kind vocabulary rather than
-  one. *Recommended: a per-kind `terminal_statuses`.*
+  one. **RULED: a per-kind `terminal_statuses`.**
 - **Q5 — one proxy or two.** The engine is at `openXdox-code` and the ruling
   names a module at `openDox-code`; whether one registration point serves both
-  payloads or each leg carries its own. *Recommended: one registry, two
-  accessors.*
+  payloads or each leg carries its own. **RULED: one registration, two
+  accessors.**
+
+**Q6 — how a NEVER-IMMUTABLE kind declares its immutability point.** OPEN.
+Asked on `openxFactory#656` after ASK-4's ruling, because it arrives UNDER
+ruled Q3: v1 ENFORCES the immutability point, and `projection` is *"never
+authoritative, never hand-edited, and not immutable"* — a lawful instance of
+exactly the answer the capability refuses to let default (*"a vocabulary with
+no declared immutability point SHALL be refused rather than defaulted to
+'never'"*). Without a declared exemption the engine refuses a lawful
+projection; with the wrong one it re-opens the permissive default that clause
+shut. The three shapes:
+
+1. **The kind declares `immutability_point: {status: <its own>, addenda:
+   regenerated}`** — one new `addenda` value saying the lawful later write is a
+   regeneration by the declared generator, with `note` required alongside it so
+   the reason sits in the declaration rather than being inferred. *Keeps the
+   field required and every kind answering; the exemption is a declared VALUE,
+   never an omission, so nothing about the refusal weakens. Adds one enum
+   value.* **← RECOMMENDED, and what the schema beside this note encodes.**
+2. **`immutability_point` becomes optional for kinds flagged `re_derived:
+   true`.** *Simpler to write; re-opens the permissive default the capability
+   shut, for a whole CLASS of kinds rather than for none.*
+3. **Projections are not a lifecycle kind at all** and carry no lifecycle
+   entry. *Smallest schema; contradicts the source, which puts `projection` in
+   the controlled `Status:` table beside the other eight and gives it a
+   promoted requirement of its own.*
+
+---
+
+## 9. Corrections
+
+**2026-09-11 — the taxonomy is NINE words, not eight.** The first revision of
+this note (landed as `openXdox-spec` #8, merge commit `446a13f5`) asserted in
+§ 1 and § 3.2 that `openxFactory`'s controlled `Status:` table carried EIGHT
+statuses and that the packet's "nine-word" phrasing was a citation defect
+upstream. **That finding was FALSE.** It was read from a local reference
+checkout of `openxFactory` sitting hundreds of commits behind `main`; the live
+table has NINE rows, and the ninth — `projection` — is a real status with a
+promoted requirement behind it.
+
+- **Caught by** the Copilot review on `openXdox-spec` #8, review comment
+  [`3988822805`](https://github.com/opensoft/openXdox-spec/pull/8#discussion_r3988822805),
+  which named the missing `projection` row against the cited source. It arrived
+  after that PR had merged.
+- **Retracted in full** at `opensoft/openxFactory#656` comment
+  [`5633989351`](https://github.com/opensoft/openxFactory/issues/656#issuecomment-5633989351),
+  which also records what the error did and did not damage: the SHAPE is
+  untouched — no axis, no accessor, no migration row changes — and ASK-4's
+  finding 1 (seventeen occurrences over fifteen lines), measured over the API
+  rather than against a checkout, stands.
+- **Corrected here**, with the row quoted verbatim from `opensoft/openxFactory`
+  `main` `38c076d1`, and in the profile example and schema beside this note.
+  The correction raised Q6 above, which the retraction also flagged.
+- **One further inconsistency corrected in passing**, from the same review:
+  `record` was terminal on the `evidence-record` kind and absent from
+  `governance-document`'s `terminal_statuses` (review comment
+  [`3988822633`](https://github.com/opensoft/openXdox-spec/pull/8#discussion_r3988822633)).
+  Under the sharpened definition in § 3.3 a captured record is FINISHED and so
+  terminal in both; it is now declared in both.
+
+**The lesson, recorded because it is the reusable part:** a local
+`~/projects/...` checkout is REFERENCE, not truth. Any finding asserting a
+DEFECT in another repository's file is measured against that repository's
+`main` over the API before it is written down. Every citation in this note's
+§ 1 and § 3.2 is.
