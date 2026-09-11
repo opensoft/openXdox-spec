@@ -299,7 +299,7 @@ behavior, task 3.8), so there is deliberately no negative for it.
 
 ```bash
 # Self-test all fixtures + scan the checkout for real instances / committed manifests:
-python3 opensoft/openXdox-code/scripts/validate-ideation-dashboard-contracts.py
+python3 ../code/scripts/validate-ideation-dashboard-contracts.py
 
 # …and the same sweep with warnings treated as errors. It PASSES over this
 # directory again as of contract-v3.0, and the history is worth stating because
@@ -315,14 +315,14 @@ python3 opensoft/openXdox-code/scripts/validate-ideation-dashboard-contracts.py
 # the removal at contract-v3.0; the fixtures went with the family and the
 # warnings with them. Use `--strict` to FIND deprecated and otherwise-warned
 # shapes; it no longer refuses this directory for that reason:
-python3 opensoft/openXdox-code/scripts/validate-ideation-dashboard-contracts.py --strict
+python3 ../code/scripts/validate-ideation-dashboard-contracts.py --strict
 
 # One file (kind auto-detected):
-python3 opensoft/openXdox-code/scripts/validate-ideation-dashboard-contracts.py \
+python3 ../code/scripts/validate-ideation-dashboard-contracts.py \
     examples/ideation-dashboard/ideation-dashboard-snapshot.example.yaml
 
 # Register transition legality:
-python3 opensoft/openXdox-code/scripts/validate-ideation-dashboard-contracts.py --transition \
+python3 ../code/scripts/validate-ideation-dashboard-contracts.py --transition \
     examples/ideation-dashboard/transitions/valid-pick-and-reject.before.yaml \
     examples/ideation-dashboard/transitions/valid-pick-and-reject.after.yaml
 ```
