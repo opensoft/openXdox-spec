@@ -1,6 +1,7 @@
 code_surface: opensoft/openXdox-code (already shipped: `src/openxdox/role_authority_projection.py` #10 `4f98e77c7985f786af2ec295c38b6b06a7f5fce6`, `src/openxdox/evidence_provenance_surface.py` #11 `427230c340cdb1f5d114d3868073cd156fa33ada`, `src/openxdox/model_scenario_workbench.py` #12 `5333b125dc0f2dd9ee6f6e558c758fbfe6c49b4d` — the three merges are the realization evidence this proposal cites)
 target_release: none — this leg is documentation-only; the code surface already ships on openXdox-code's own release line
-Status: draft — ACTIVE, awaiting Brett Heap's ratification; promotion to `openspec/specs/` and archive are his ratification act, not this PR's
+Status: ratified
+Ratified by: Brett Heap, 2026-09-11 — https://github.com/opensoft/openxFactory/issues/656#issuecomment-5633977407, record `review/ratification-2026-09-11.md`
 
 ---
 
