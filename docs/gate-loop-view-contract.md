@@ -20,9 +20,10 @@ Topics: openxdox, opendox, front-end, package-boundary, view-registry, slice-s5
 > written by it. What it adds is a measurement of the shell as the S3 view
 > registry actually leaves it, stated as the contract S5 must satisfy. § 8
 > carries the twelve questions a ruling had to settle before S5 starts; each was
-> a point the shell has NOT fixed. **All twelve are now RULED** — Brett Heap,
-> 2026-09-12, amendment #1 (§ 10) — and each is marked at the point it was
-> decided; the measurements below are unchanged by the ruling.
+> a point the shell has NOT fixed. **Eleven of the twelve are now RULED** —
+> Brett Heap, 2026-09-12, amendment #1 (§ 10) — and each is marked at the point
+> it was decided; Q6 stays open, flagged rather than assumed (§ 8, § 10). The
+> measurements below are unchanged by the ruling.
 
 **Everything measured here was read live on 2026-09-12 at these heads:**
 `opensoft/openDox-code` branch `build/s3-view-registry` (PR
@@ -103,8 +104,10 @@ assumed:
    below records what the shell does say, and **§ 8 Q4 — RULED, amendment #1
    (§ 10)** — supplies the one it does not: dotted paths into the
    `/capabilities` payload, evaluated by the client at mount; unmet +
-   `optional: true` empties the region with a named reason, unmet + required
-   refuses, naming the binding, the path and the probed value.
+   `optional: true` contributes no content for that binding, with a named
+   reason recorded (§ 2.2's region-sharing stands — nothing else already in
+   the region is touched); unmet + required refuses, naming the binding, the
+   path and the probed value.
 
 ---
 
@@ -146,10 +149,18 @@ because `regionHost()` REFUSES for a `shell` region (above), a caller that does
 try to resolve one gets that refusal, not a silent no-op. Both facts are now
 written down rather than left to be discovered.
 
-**§ 8 Q8 — RULED, amendment #1 (§ 10):** a thirteenth region overall,
-`page-overlay` (the fourth of kind `shell`), is added by the ruling for S5 to
-declare — it is not yet in the table above, which still measures the S3 head's
-twelve. § 6.2 has the detail.
+**§ 8 Q8 — RULED, amendment #1 (§ 10): a thirteenth region, prospective, not
+yet in the table above.** The table above measures the S3 head's twelve; the
+row below is what the ruling adds for S5 to declare — kept separate so the
+measured table stays a measurement:
+
+| region | kind | the host, RULED (not yet in code) |
+|---|---|---|
+| `page-overlay` | shell | a fourth `shell` region: the shell builds it and hands it over, the same caller-driven handoff `viewer-gatebar` already uses (§ 2.1 above) — declared to end `views/dispose.js`:69's undeclared reach into `document.body` (§ 6.2) |
+
+Once S5 declares it, this row moves into the table above and this note's
+§ 9 does not call that a correction — the table has measured thirteen from
+that point on.
 
 ### 2.2 What the host element guarantees — and what it does not
 
@@ -333,7 +344,9 @@ named) and *"a host contributes panels and this is not one of them"* (a
 So the spelling and the semantics of `requires` are now RULED — **§ 8 Q4,
 amendment #1 (§ 10), `opensoft/openxFactory#656` comment `5648049748`**: dotted
 paths into the `/capabilities` payload, evaluated by the client at mount; unmet
-+ `optional: true` empties the region with a named reason, unmet + required
++ `optional: true` contributes no content for that binding, with a named
+reason recorded (§ 2.2's region-sharing stands — an unmet optional binding
+does not clear anything else already mounted in the region); unmet + required
 refuses, naming the binding, the path and the probed value. Until S5 lands the
 code, a binding declaring `requires` is still declaring an intention the shell
 does not yet act on.
@@ -377,7 +390,7 @@ whoever ASSEMBLES the shell rather than to a contributing column.
 | 9 | a non-class-B binding naming another column's route | "view binding `<id>` is class `<class>` and declares route `<pattern>`, which another column contributed. RULED Q3 …: a route constant travels with the BINDING THAT CALLS IT, never with the model that happens to declare it." | :264–269 |
 | 10 | a contributed entry carrying `mount` or `control` | "the /capabilities `views` payload declares `<field>` on `<id>`: `mount` and `control` belong to the shell's own core arm and cannot cross the process boundary. A contributed binding names a module and an entry and is loaded through resolveView()." | :326–330 |
 | 11 | a non-bundle-relative module specifier | "a contributed module must be a bundle-relative './…js' specifier that does not climb out of the bundle. An absolute URL is a remote script, which § 4.4's vendor policy forbids outright." | :134–141 |
-| — | **an unmet `requires`** | **there is none** | § 4.4 above; § 8 Q4 (RULED) |
+| — | **an unmet `requires`** | **no code exists yet; RULED target (§ 8 Q4): required — refuses, naming the binding, the path and the probed value; optional — no throw, region gets no content from this binding, with a named reason recorded** | § 4.4 above; § 8 Q4 (RULED) |
 
 **Two things a contributed binding may rely on today.** First, refusal #2: an
 absent optional binding is a `null`, never a throw, and `views/viewer.js`:312–313
@@ -398,8 +411,10 @@ A refused ASSEMBLY is therefore reported to the human as a SNAPSHOT defect, with
 the seam's own carefully-composed message parenthesised inside advice that does
 not apply. The messages are right; the frame around them is wrong. **§ 8 Q11 —
 RULED, amendment #1 (§ 10):** the shell catches `ViewBindingError` separately
-and reports it as an assembly refusal naming the binding, never again framed as
-a snapshot defect.
+and reports it as an assembly refusal naming the binding, the rule and the
+probed value — never again framed as a snapshot defect. *(The ruling names
+all three; the RECOMMENDED text below only named the binding — the ruling
+extends it.)*
 
 ---
 
@@ -429,10 +444,12 @@ already exists in the core arm marked TRANSITIONAL (`app.js`:590–595), and
 deleting that entry plus arriving through `contributedViewBindings()` changes
 nothing else in `app.js`. What it still needs — Q2 (the second export), Q5
 (where the bytes come from) and Q7 (the CSS) — **is now RULED (amendment #1,
-§ 10):** the `exports` tuple names `isGateBearing`; the composed deployment
-assembles the bundle, a contributed GET route kept as the hosted fallback; the
-CSS travels with the binding, in its own sheet, against openDox's declared
-design tokens as the one stable styling surface.
+§ 10):** the `exports` tuple names `isGateBearing`, and an undeclared reach
+past that tuple is a refusal (extending the RECOMMENDED text below, which
+named the tuple but not this consequence); the composed deployment assembles
+the bundle, a contributed GET route kept as the hosted fallback; the CSS
+travels with the binding, in its own sheet, against openDox's declared design
+tokens as the one stable styling surface.
 
 ### 6.2 `views/dispose.js` — 427 lines
 
@@ -458,11 +475,12 @@ the reason the student install fails to load rather than 404s. S5 must convert
 that import to the `intent-binding.js` shape or a registry lookup, or the "no
 404" promise is a module-graph failure instead.
 
-**The page-level host is also settled — see § 2.1's cross-reference too.**
+**The page-level host is also settled — § 2.1 carries the prospective row.**
 § 8 Q8 — RULED, amendment #1 (§ 10): a thirteenth region, `page-overlay` (kind
 `shell`), is what the ruling adds as the host for page-level panels — not yet
-in § 2.1's table, which still measures the S3 head's twelve; `ensurePanel()`'s
-reach into `document.body` above is the exact case the ruling ends.
+in § 2.1's measured `REGIONS` table, which still measures the S3 head's
+twelve; `ensurePanel()`'s reach into `document.body` above is the exact case
+the ruling ends.
 
 ### 6.3 `views/swb-create.js` — 372 lines
 
@@ -549,15 +567,18 @@ read. Class B is exempt by construction, which is the boundary working.
 
 ---
 
-## 8. Open questions for Brett Heap — Q1–Q12 (RULED, amendment #1)
+## 8. Open questions for Brett Heap — Q1–Q5, Q7–Q12 RULED; Q6 open (amendment #1)
 
 Twelve were asked, each a point the S3 shell had NOT fixed, each carrying a
-RECOMMENDED answer. **All twelve are now RULED** — Brett Heap, 2026-09-12, by
+RECOMMENDED answer. **Eleven are now RULED** — Brett Heap, 2026-09-12, by
 interactive multi-choice, `opensoft/openxFactory#656` comments `5648044785`,
-`5648049748` and `5648065587` — the RECOMMENDED answer adopted in every case.
-What follows is the as-asked record: the measurement and the RECOMMENDED
-answer stand as first written, and each question now also carries the line
-marking where and when it was decided. § 10 carries the amendment record.
+`5648049748` and `5648065587` — the RECOMMENDED answer adopted in every ruled
+case. **Q6 stays open**: the sitting's closing comment asserts all twelve are
+ruled, but no comment gives Q6 a dedicated bullet, so it is not recorded as
+ruled here (see Q6's own note below). What follows is the as-asked record: the
+measurement and the RECOMMENDED answer stand as first written, and each ruled
+question now also carries the line marking where and when it was decided.
+§ 10 carries the amendment record.
 
 **Q1 — Does the shell MOUNT contributed bindings, or must every one have a named
 reader?** Measured: nothing generic mounts a contributed binding. The tab router
@@ -590,8 +611,12 @@ rather than reached past the declaration. *The alternative — one entry only, w
 `viewer.js`'s gate-bearing decision from a predicate into a mount, which is a
 behaviour change inside a class-A file.*
 
-**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
-opensoft/openxFactory#656 comment 5648049748, by interactive multi-choice.
+**RULED — the RECOMMENDED answer adopted, and extended.** Brett Heap,
+2026-09-12, opensoft/openxFactory#656 comment 5648049748, by interactive
+multi-choice: *"an undeclared reach (today `isGateBearing`, app.js:939) is a
+refusal"* — the ruling states this consequence explicitly; the RECOMMENDED
+text above named the `exports` tuple but not this. § 6.1's restatement
+carries the fuller wording.
 
 **Q3 — What is a contributed binding's mount SIGNATURE?** Measured: two exist. A
 core tab is `mount(root, snap, ctx)` (`app.js`:516 and the six after it). The one
@@ -657,12 +682,16 @@ the contributing column or added to a declared guarantee list by a ruling; the
 `staging-workbench-model.js` names are S4's to resolve first, and `gate.js`
 already shows the import-free posture is achievable.*
 
-**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
-opensoft/openxFactory#656 comment 5648065587, by interactive multi-choice. *This
-one carries no dedicated bullet in the sitting's three comments — only the
-third's closing line, "All twelve counterpart questions ... are now RULED" —
-so the citation is to that blanket line rather than to a worked restatement;
-flagged here rather than silently assumed.*
+**STILL OPEN — not individually ruled.** The sitting's closing comment
+(`opensoft/openxFactory#656` comment `5648065587`) asserts *"All twelve
+counterpart questions ... are now RULED,"* but none of the three comments
+gives Q6 a dedicated bullet or selects among its options the way Q1–Q5 and
+Q7–Q12 each were. Recording it RULED on that blanket line alone would let an
+implementer treat `./views/helpers.js` as the settled import guarantee
+without Brett having actually picked it here; amendment #1 (§ 10) leaves Q6
+open pending a dedicated ruling rather than assume the blanket line covers
+it. The RECOMMENDED answer above is unchanged and remains the standing
+recommendation until then.
 
 **Q7 — Where does a contributed binding's CSS live?** Measured: every class-B
 selector sits in openDox's `styles.css` — `.viewer-gate` :771, `.gatebar*`
@@ -730,8 +759,11 @@ refusal, naming the binding.** *The seam already composes the right sentence;
 only the frame around it is wrong, and a column debugging its own contribution
 is currently told to regenerate a snapshot that is fine.*
 
-**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
-opensoft/openxFactory#656 comment 5648065587, by interactive multi-choice.
+**RULED — the RECOMMENDED answer adopted, and extended.** Brett Heap,
+2026-09-12, opensoft/openxFactory#656 comment 5648065587, by interactive
+multi-choice: *"shows a registry refusal naming the binding, the rule and the
+value"* — the ruling names all three; the RECOMMENDED text above named only
+the binding. § 5's restatement carries the fuller wording.
 
 **Q12 — How does a binding declare a route it COMPUTES?** Measured:
 `views/dispose.js`:396 posts to `"/actions/gate/" + verb`, with the four verbs
@@ -763,36 +795,67 @@ the error did and did not damage.
 
 ## 10. Amendments
 
-**Amendment #1 — 2026-09-12 — § 8's twelve open questions RULED.** Brett Heap
-ruled all twelve, by interactive multi-choice, in one sitting on
-`opensoft/openxFactory#656`, across three comments:
+**Amendment #1 — 2026-09-12 — § 8's twelve open questions: eleven RULED, one
+left open.** Brett Heap ruled eleven of the twelve, by interactive
+multi-choice, in one sitting on `opensoft/openxFactory#656`, across three
+comments:
 [`5648044785`](https://github.com/opensoft/openxFactory/issues/656#issuecomment-5648044785)
 (Q1, Q3, Q5, and separately the boundary note's own Q6 — a different document's
 question of the same number, not this note's),
 [`5648049748`](https://github.com/opensoft/openxFactory/issues/656#issuecomment-5648049748)
 (Q2, Q4, Q7, Q8), and
 [`5648065587`](https://github.com/opensoft/openxFactory/issues/656#issuecomment-5648065587)
-(Q9, Q10, Q11, Q12, and its own closing line declaring all twelve RULED — the
-citation this amendment also uses for Q6, which carries no dedicated bullet of
-its own in any of the three comments; see the flag at § 8 Q6).
+(Q9, Q10, Q11, Q12, and its own closing line asserting all twelve are ruled).
 
-- **What changed.** § 8: each Q1–Q12 gained a `RULED` line naming the ruling
-  Brett Heap made and its comment id. §§ 1–6: every place that framed one of
-  these twelve as still open or undecided — the mount pass (Q1), the `requires`
-  refusal semantics (Q4, § 1 and § 4.4), the mount-signature count (Q3, § 3),
-  the STABLE/UNSETTLED cross-reference (Q3/Q4, § 3), the unhosted `shell`
-  regions (Q9, § 2.1), the unmet-`requires` refusal row and the snapshot-defect
+- **Q6 is the exception, and it is left open on purpose.** That closing line
+  in `5648065587` says *"All twelve counterpart questions ... are now
+  RULED,"* but none of the three comments gives this note's own Q6 (bundle
+  imports) a dedicated bullet or selects among its options the way Q1–Q5 and
+  Q7–Q12 each were — Copilot's review of this PR caught the same gap
+  independently. Recording Q6 as RULED on the blanket line alone would let
+  an implementer treat it as settled when Brett has not actually picked an
+  option here, so § 8 Q6 stays marked open, and this amendment's title says
+  eleven, not twelve.
+- **What changed.** § 8: each of Q1–Q5 and Q7–Q12 gained a `RULED` line
+  naming the ruling and its comment id; Q6 gained an explicit open note
+  instead. §§ 1–6: every place that framed one of the eleven ruled questions
+  as still open or undecided — the mount pass (Q1), the `requires` refusal
+  semantics (Q4, § 1 and § 4.4), the mount-signature count (Q3, § 3), the
+  STABLE/UNSETTLED cross-reference (Q3/Q4, § 3), the unhosted `shell` regions
+  (Q9, § 2.1), the unmet-`requires` refusal row and the snapshot-defect
   framing (Q4/Q11, § 5), the gate.js exports/bytes/CSS trio (Q2/Q5/Q7, § 6.1),
   the page-level host and the computed route (Q8/Q12, § 6.2), and the
   `firstEditTransport` shape (Q10, § 6.4) — was restated as settled, with the
-  ruling cited in place. The measurements themselves (what the S3 shell
-  actually does today) are untouched; only what was said to be open moved to
-  what is now decided. § 9's "None" stands: nothing here corrects an error,
-  every RECOMMENDED answer this note already carried was adopted as written.
+  ruling cited in place. Nothing was restated for Q6. The measurements
+  themselves (what the S3 shell actually does today) are untouched; only what
+  was said to be open moved to what is now decided. § 9's "None" stands:
+  nothing here corrects an error, every RECOMMENDED answer this note already
+  carried was adopted as written.
+- **Fix round 1 (same PR, after Copilot's first review)** sharpened two of
+  the new restatements: the Q9 note no longer says a `shell`-region binding
+  "mounts into nothing" — it now separates the two true facts (Q1's mount
+  pass never reaches a `shell` region; `regionHost()` REFUSES for one rather
+  than no-opping) — and § 2.1 gained the Q8 cross-reference (a ruled
+  thirteenth region, `page-overlay`, not yet in the measured twelve), matched
+  in the README's doc-index row.
+- **Fix round 2 (same PR, after Copilot's second review)** made three more
+  corrections: reversed Q6 from RULED to open (above); reworded the Q4
+  restatements so "empties the region" cannot be read as clearing a SHARED
+  region against § 2.2's no-emptying rule — a binding with an unmet optional
+  `requires` contributes no content of its own, nothing else in the region is
+  touched; completed the Q11 restatement, which had dropped two of the three
+  things the ruling names (the shell now names the binding, the rule AND the
+  probed value, not the binding alone); and completed the Q2 restatement to
+  say what the ruling adds beyond the original recommendation — an
+  undeclared reach past the `exports` tuple is a refusal. § 2.1 also gained
+  an explicit prospective row for `page-overlay`, kept out of the measured
+  `REGIONS` table.
 - **What did not change.** The `Status: draft` header, the § 8 questions'
   MEASURED/RECOMMENDED text (kept verbatim as the as-asked record), and every
   citation's underlying line numbers and shas.
-- **Consequences, per the ruling comments.** These twelve rulings are now S5's
-  and S8's design inputs; S5 (§ 3.4, contributing the gate loop) is authored on
-  top of S4's leg under this contract, and the Q5 package-data/composed-assembly
-  seam binds the S5 brief.
+- **Consequences, per the ruling comments.** These eleven rulings are now
+  S5's and S8's design inputs; S5 (§ 3.4, contributing the gate loop) is
+  authored on top of S4's leg under this contract, and the Q5
+  package-data/composed-assembly seam binds the S5 brief. Q6 needs a
+  follow-up ruling before S5 can rely on an import guarantee beyond
+  `./views/helpers.js`.
