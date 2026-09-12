@@ -19,9 +19,10 @@ Topics: openxdox, opendox, front-end, package-boundary, view-registry, slice-s5
 > `openXdox-code` moves with it, no binding is authored by it, and no test is
 > written by it. What it adds is a measurement of the shell as the S3 view
 > registry actually leaves it, stated as the contract S5 must satisfy. § 8
-> carries the twelve questions a ruling must settle before S5 starts; every one
-> of them is a point the shell has NOT fixed, and none is written here as
-> decided.
+> carries the twelve questions a ruling had to settle before S5 starts; each was
+> a point the shell has NOT fixed. **All twelve are now RULED** — Brett Heap,
+> 2026-09-12, amendment #1 (§ 10) — and each is marked at the point it was
+> decided; the measurements below are unchanged by the ruling.
 
 **Everything measured here was read live on 2026-09-12 at these heads:**
 `opensoft/openDox-code` branch `build/s3-view-registry` (PR
@@ -85,7 +86,11 @@ assumed:
    (`app.js`:590–599). S5 deletes that entry and the identical binding arrives
    through `contributedViewBindings()`, at which point the call site becomes the
    shell's only contributed mount and it is still BY ID, not generic: a second
-   contributed binding would need a second openDox call site.
+   contributed binding would need a second openDox call site. **§ 8 Q1 —
+   RULED, amendment #1 (§ 10):** a generic mount pass — after
+   `collectViewBindings`, the shell mounts every contributed binding whose
+   region is `dom` into that region's host, in declaration order; `shell`
+   regions stay caller-driven, the gate bar kept as the declared exception.
 2. **Nothing publishes a manifest.** `view_manifest`, `host_view_extensions` and
    `collect_view_bindings` have ZERO callers anywhere under `src/` outside the
    module that defines them (swept at `a497d715`). The server-side hop is
@@ -94,8 +99,12 @@ assumed:
    (`view_extension.py`:248–251), validated (:321–329), carried into the
    manifest (:355) and mirrored in the client (`views/view_extension.js`:159–163,
    :185) — and no line of either half READS it to decide anything. The refusal
-   text § 5.1 asks this note to settle therefore does not exist yet: § 5 below
-   records what the shell does say, and § 8 Q4 asks for the one it does not.
+   text § 5.1 asks this note to settle therefore does not exist yet in code: § 5
+   below records what the shell does say, and **§ 8 Q4 — RULED, amendment #1
+   (§ 10)** — supplies the one it does not: dotted paths into the
+   `/capabilities` payload, evaluated by the client at mount; unmet +
+   `optional: true` empties the region with a named reason, unmet + required
+   refuses, naming the binding, the path and the probed value.
 
 ---
 
@@ -128,6 +137,11 @@ mirrored at `views/view_extension.js`:69–82, and held to each other and to
 `getElementById(binding.region)` for a `dom` region and REFUSES for a `shell`
 one, because *"a 'shell' region has no standing element by definition, so asking
 for one is a caller error rather than an absence"*.
+
+**§ 8 Q9 — RULED, amendment #1 (§ 10):** both declared `shell` regions stand.
+`wheel-intent` and `dispose-intent` stay declared in both halves, recorded here
+as unhosted and unread today; a contributed binding naming either now mounts
+into nothing, written down rather than left to be discovered.
 
 ### 2.2 What the host element guarantees — and what it does not
 
@@ -212,7 +226,10 @@ one is building on a surface with no declared owner.
 object is not a designed interface; it is the union of what seven core views
 happened to need, and twelve of its fourteen fields are read only by modules
 S4 and S7 are scheduled to rewrite. A contributed binding may rely on `views`
-and on `nav.openDoc` and on nothing else without a ruling (§ 8 Q3 and Q4).
+and on `nav.openDoc` and on nothing else without a further ruling: § 8 Q3 and
+Q4 are RULED (amendment #1, § 10) — the mount signature and the `requires`
+refusal semantics — but which of the remaining twelve fields a binding may
+read stays this table's STABLE/UNSETTLED marking, S7's to resolve.
 
 **And the gate bar never receives this object at all.** `gate.bar` is not a tab,
 so the tab router never mounts it; `app.js`:993–995 wraps it in a closure that
@@ -220,7 +237,9 @@ hands `mountGateBar` a host the VIEWER built, a per-artifact context the viewer
 composed (`views/viewer.js`:344 — `{ changeId, path, repository, actor }`), and
 an options object carrying exactly `{ caps }`. There are therefore TWO mount
 signatures in the shell today and the contributed one is the minority case with
-no snapshot in it. § 8 Q3.
+no snapshot in it. **§ 8 Q3 — RULED, amendment #1 (§ 10):** one signature,
+`mount(host, snapshot, ctx)`, with the gate bar's shape kept as the one
+declared exception until S5 rewrites it.
 
 ---
 
@@ -289,7 +308,7 @@ registered and contributes no panels"* (`host_facet: "absent"` with the profile
 named) and *"a host contributes panels and this is not one of them"* (a
 `views` array that does not carry the id).
 
-### 4.4 What `requires` may name — measured, and undecided
+### 4.4 What `requires` may name — measured, and RULED
 
 `ViewBinding.requires` is documented as *"Capability keys (`/capabilities`'
 `actions`) or profile facets the binding needs. Consulted by the CLIENT at mount"*
@@ -303,9 +322,13 @@ named) and *"a host contributes panels and this is not one of them"* (a
    consumer. `tests/test_view_registry.py` touches it three times
    (:180, :830, :870), all of them shape assertions.
 
-So the spelling and the semantics of `requires` are open, not settled, and § 8
-Q4 asks for both. Until then a binding declaring `requires` is declaring an
-intention the shell does not act on.
+So the spelling and the semantics of `requires` are now RULED — **§ 8 Q4,
+amendment #1 (§ 10), `opensoft/openxFactory#656` comment `5648049748`**: dotted
+paths into the `/capabilities` payload, evaluated by the client at mount; unmet
++ `optional: true` empties the region with a named reason, unmet + required
+refuses, naming the binding, the path and the probed value. Until S5 lands the
+code, a binding declaring `requires` is still declaring an intention the shell
+does not yet act on.
 
 ---
 
@@ -346,7 +369,7 @@ whoever ASSEMBLES the shell rather than to a contributing column.
 | 9 | a non-class-B binding naming another column's route | "view binding `<id>` is class `<class>` and declares route `<pattern>`, which another column contributed. RULED Q3 …: a route constant travels with the BINDING THAT CALLS IT, never with the model that happens to declare it." | :264–269 |
 | 10 | a contributed entry carrying `mount` or `control` | "the /capabilities `views` payload declares `<field>` on `<id>`: `mount` and `control` belong to the shell's own core arm and cannot cross the process boundary. A contributed binding names a module and an entry and is loaded through resolveView()." | :326–330 |
 | 11 | a non-bundle-relative module specifier | "a contributed module must be a bundle-relative './…js' specifier that does not climb out of the bundle. An absolute URL is a remote script, which § 4.4's vendor policy forbids outright." | :134–141 |
-| — | **an unmet `requires`** | **there is none** | § 4.4 above; § 8 Q4 |
+| — | **an unmet `requires`** | **there is none** | § 4.4 above; § 8 Q4 (RULED) |
 
 **Two things a contributed binding may rely on today.** First, refusal #2: an
 absent optional binding is a `null`, never a throw, and `views/viewer.js`:312–313
@@ -365,7 +388,10 @@ binding whose module is missing and get a named refusal rather than a raw
 
 A refused ASSEMBLY is therefore reported to the human as a SNAPSHOT defect, with
 the seam's own carefully-composed message parenthesised inside advice that does
-not apply. The messages are right; the frame around them is wrong. § 8 Q11.
+not apply. The messages are right; the frame around them is wrong. **§ 8 Q11 —
+RULED, amendment #1 (§ 10):** the shell catches `ViewBindingError` separately
+and reports it as an assembly refusal naming the binding, never again framed as
+a snapshot defect.
 
 ---
 
@@ -393,8 +419,12 @@ no 404."*
 This is the file S5 has the easiest path for: it is import-free, its binding
 already exists in the core arm marked TRANSITIONAL (`app.js`:590–595), and
 deleting that entry plus arriving through `contributedViewBindings()` changes
-nothing else in `app.js`. What it still needs is Q2 (the second export), Q5
-(where the bytes come from) and Q7 (the CSS).
+nothing else in `app.js`. What it still needs — Q2 (the second export), Q5
+(where the bytes come from) and Q7 (the CSS) — **is now RULED (amendment #1,
+§ 10):** the `exports` tuple names `isGateBearing`; the composed deployment
+assembles the bundle, a contributed GET route kept as the hosted fallback; the
+CSS travels with the binding, in its own sheet, against openDox's declared
+design tokens as the one stable styling surface.
 
 ### 6.2 `views/dispose.js` — 427 lines
 
@@ -413,11 +443,17 @@ nothing else in `app.js`. What it still needs is Q2 (the second export), Q5
 **Two facts here are S5's hardest.** The computed route at :396 cannot be
 declared as it is written: `ViewBinding.routes` admits only literal paths rooted
 at `/` (`view_extension.py`:316–320), so the binding either enumerates the four
-verbs or the ownership check never sees them (§ 8 Q12). And `wheel.js` is class C with a
-STATIC import of this class-B module: § 4.5 assertion 3's breach, and the reason
-the student install fails to load rather than 404s. S5 must convert that import
-to the `intent-binding.js` shape or a registry lookup, or the "no 404" promise is
-a module-graph failure instead.
+verbs or the ownership check never sees them (**§ 8 Q12 — RULED, amendment #1
+(§ 10): the binding enumerates the four as literals**). And `wheel.js` is class
+C with a STATIC import of this class-B module: § 4.5 assertion 3's breach, and
+the reason the student install fails to load rather than 404s. S5 must convert
+that import to the `intent-binding.js` shape or a registry lookup, or the "no
+404" promise is a module-graph failure instead.
+
+**The page-level host is also settled.** § 8 Q8 — RULED, amendment #1 (§ 10):
+a fourth `shell` region, `page-overlay`, is the declared host for page-level
+panels; `ensurePanel()`'s reach into `document.body` above is the exact case
+the ruling ends.
 
 ### 6.3 `views/swb-create.js` — 372 lines
 
@@ -442,7 +478,11 @@ a module-graph failure instead.
 
 **`app.js`:57 is the shell's remaining class-A → class-B import.** § 4.1 named
 only line 43, and S3 removed it; this one is still a static `import` at the S3
-head. It is not a panel, so the registry as built has no shape for it. § 8 Q10.
+head. It is not a panel, so the registry as built has no shape for it. **§ 8
+Q10 — RULED, amendment #1 (§ 10):** it travels as a declared non-mount export
+of the workbench's contributed binding (Q2's `exports` tuple), reached through
+`resolveView` at this one call site, with a refusal-shaped fallback when the
+binding is absent.
 
 ### 6.5 The thirteen route constants, and where they sit at the S3 head
 
@@ -500,10 +540,15 @@ read. Class B is exempt by construction, which is the boundary working.
 
 ---
 
-## 8. Open questions for Brett Heap
+## 8. Open questions for Brett Heap — Q1–Q12 (RULED, amendment #1)
 
-Twelve. Each is a point the S3 shell has NOT fixed, each carries a RECOMMENDED
-answer, and **none of them is written above as decided.**
+Twelve were asked, each a point the S3 shell had NOT fixed, each carrying a
+RECOMMENDED answer. **All twelve are now RULED** — Brett Heap, 2026-09-12, by
+interactive multi-choice, `opensoft/openxFactory#656` comments `5648044785`,
+`5648049748` and `5648065587` — the RECOMMENDED answer adopted in every case.
+What follows is the as-asked record: the measurement and the RECOMMENDED
+answer stand as first written, and each question now also carries the line
+marking where and when it was decided. § 10 carries the amendment record.
 
 **Q1 — Does the shell MOUNT contributed bindings, or must every one have a named
 reader?** Measured: nothing generic mounts a contributed binding. The tab router
@@ -521,6 +566,9 @@ contributed panel needs an openDox edit to become reachable, which is the fork
 the seam was drawn to prevent; with it the gate bar stays the declared
 exception, because its host is built per artifact and not per render.*
 
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5648044785, by interactive multi-choice.
+
 **Q2 — Is a binding's contract its `entry`, or its whole module namespace?**
 Measured: `resolveView` returns `{ binding, exports }` — the whole namespace
 (`views/view_extension.js`:440) — and `app.js`:939 reads
@@ -533,6 +581,9 @@ rather than reached past the declaration. *The alternative — one entry only, w
 `viewer.js`'s gate-bearing decision from a predicate into a mount, which is a
 behaviour change inside a class-A file.*
 
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5648049748, by interactive multi-choice.
+
 **Q3 — What is a contributed binding's mount SIGNATURE?** Measured: two exist. A
 core tab is `mount(root, snap, ctx)` (`app.js`:516 and the six after it). The one
 contributed-shaped mount is `mountGateBar(container, ctx, opts)` (`gate.js`:140),
@@ -544,6 +595,9 @@ data carried in `ctx`, and the gate bar's shape kept as a DECLARED exception
 named in this note.** *Two undeclared signatures is how a contributing column
 learns the contract by reading `app.js`, which is the coupling the registry
 exists to end.*
+
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5648044785, by interactive multi-choice.
 
 **Q4 — What may `requires` name, and what does the shell DO when it is unmet?**
 Measured: nothing consults `requires` at the S3 head (§ 4.4); the docstring says
@@ -558,6 +612,9 @@ refuses, naming the binding, the unmet path and the probed value.** *That is
 makes `requires: ["actions.gate"]` — already written — correct rather than
 aspirational. Profile facets would need a second namespace and no binding asks
 for one yet.*
+
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5648049748, by interactive multi-choice.
 
 **Q5 — Where do a contributed module's BYTES come from?** Measured, and the
 sharpest gap: `_MODULE` admits only a bundle-relative `./…js`
@@ -577,6 +634,9 @@ fallback and declared here as the second lawful mechanism.** *Naming this is
 S5's real precondition: the registry refuses everything that is not
 bundle-relative, and nothing in either leg puts a file there today.*
 
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5648044785, by interactive multi-choice.
+
 **Q6 — What may a contributed module IMPORT from the bundle?** Measured: three
 of the four class-B files import `./helpers.js` (`dispose.js`:25,
 `swb-create.js`:29, `swb-session.js`:69) and two of them import six and eighteen
@@ -587,6 +647,13 @@ nothing and keeps its own `el()` (:105–110).
 the contributing column or added to a declared guarantee list by a ruling; the
 `staging-workbench-model.js` names are S4's to resolve first, and `gate.js`
 already shows the import-free posture is achievable.*
+
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5648065587, by interactive multi-choice. *This
+one carries no dedicated bullet in the sitting's three comments — only the
+third's closing line, "All twelve counterpart questions ... are now RULED" —
+so the citation is to that blanket line rather than to a worked restatement;
+flagged here rather than silently assumed.*
 
 **Q7 — Where does a contributed binding's CSS live?** Measured: every class-B
 selector sits in openDox's `styles.css` — `.viewer-gate` :771, `.gatebar*`
@@ -600,6 +667,9 @@ surface it may use.** *Leaving them in openDox's sheet ships the gate loop's
 appearance to every student install, which is the same defect as shipping its
 routes.*
 
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5648049748, by interactive multi-choice.
+
 **Q8 — Is a page-level host inside the contract?** Measured:
 `views/dispose.js`:69 appends a singleton `aside.refusalpanel` to
 `document.body` — a mount point no region declares — and `panelEntry` is imported
@@ -608,6 +678,9 @@ by `wheel.js` (C), `swb-create.js` and `swb-session.js`.
 builds and hands over.** *An undeclared reach into `document.body` is exactly
 the silence the `REGIONS` table exists to end, and a contributed column
 appending to the body is a collision nothing can refuse.*
+
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5648049748, by interactive multi-choice.
 
 **Q9 — Do the two declared-but-unhosted `shell` regions stand?** Measured:
 `wheel-intent` and `dispose-intent` are declared in both halves
@@ -620,6 +693,9 @@ refuses nothing; an undeclared one costs a slice" — holds, and S5 is not the
 slice to retire S2's provision. But a contributed binding naming one today
 mounts into nothing, and that must be written down rather than discovered.*
 
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5648065587, by interactive multi-choice.
+
 **Q10 — How does the shell's remaining class-A → class-B import travel?**
 Measured: `app.js`:57 statically imports `firstEditTransport` from
 `views/swb-session.js` (class B) and calls it at :1134. § 4.1 named only line 43,
@@ -631,6 +707,9 @@ doxBench Save falling back to a refusal-shaped transport when no gate column is
 registered.** *A second, region-free extension point for contributed FUNCTIONS
 would work and would be a second seam, which § 4.1's whole argument is against.*
 
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5648065587, by interactive multi-choice.
+
 **Q11 — What does a human see when the registry refuses?** Measured: every
 `ViewBindingError` from `collectViewBindings` (`app.js`:976) or `resolveView`
 (:980) is caught by `render()`'s handler at :1276–1279 and reported as *"Could
@@ -641,6 +720,9 @@ snapshot defect.
 refusal, naming the binding.** *The seam already composes the right sentence;
 only the frame around it is wrong, and a column debugging its own contribution
 is currently told to regenerate a snapshot that is fine.*
+
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5648065587, by interactive multi-choice.
 
 **Q12 — How does a binding declare a route it COMPUTES?** Measured:
 `views/dispose.js`:396 posts to `"/actions/gate/" + verb`, with the four verbs
@@ -656,6 +738,9 @@ declaration of ownership rather than a pattern language. Admitting a prefix on
 the DECLARING side would let one binding claim a whole namespace, which is the
 property the contributed side's `is_prefix` is carefully limited to.*
 
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5648065587, by interactive multi-choice.
+
 ---
 
 ## 9. Corrections
@@ -664,3 +749,41 @@ None. This note is at its first revision; corrections to it are recorded here,
 in the shape `docs/domain-profile-design-note.md` § 9 uses — what was asserted,
 what was true, who caught it, where the retraction is on the record, and what
 the error did and did not damage.
+
+---
+
+## 10. Amendments
+
+**Amendment #1 — 2026-09-12 — § 8's twelve open questions RULED.** Brett Heap
+ruled all twelve, by interactive multi-choice, in one sitting on
+`opensoft/openxFactory#656`, across three comments:
+[`5648044785`](https://github.com/opensoft/openxFactory/issues/656#issuecomment-5648044785)
+(Q1, Q3, Q5, and separately the boundary note's own Q6 — a different document's
+question of the same number, not this note's),
+[`5648049748`](https://github.com/opensoft/openxFactory/issues/656#issuecomment-5648049748)
+(Q2, Q4, Q7, Q8), and
+[`5648065587`](https://github.com/opensoft/openxFactory/issues/656#issuecomment-5648065587)
+(Q9, Q10, Q11, Q12, and its own closing line declaring all twelve RULED — the
+citation this amendment also uses for Q6, which carries no dedicated bullet of
+its own in any of the three comments; see the flag at § 8 Q6).
+
+- **What changed.** § 8: each Q1–Q12 gained a `RULED` line naming the ruling
+  Brett Heap made and its comment id. §§ 1–6: every place that framed one of
+  these twelve as still open or undecided — the mount pass (Q1), the `requires`
+  refusal semantics (Q4, § 1 and § 4.4), the mount-signature count (Q3, § 3),
+  the STABLE/UNSETTLED cross-reference (Q3/Q4, § 3), the unhosted `shell`
+  regions (Q9, § 2.1), the unmet-`requires` refusal row and the snapshot-defect
+  framing (Q4/Q11, § 5), the gate.js exports/bytes/CSS trio (Q2/Q5/Q7, § 6.1),
+  the page-level host and the computed route (Q8/Q12, § 6.2), and the
+  `firstEditTransport` shape (Q10, § 6.4) — was restated as settled, with the
+  ruling cited in place. The measurements themselves (what the S3 shell
+  actually does today) are untouched; only what was said to be open moved to
+  what is now decided. § 9's "None" stands: nothing here corrects an error,
+  every RECOMMENDED answer this note already carried was adopted as written.
+- **What did not change.** The `Status: draft` header, the § 8 questions'
+  MEASURED/RECOMMENDED text (kept verbatim as the as-asked record), and every
+  citation's underlying line numbers and shas.
+- **Consequences, per the ruling comments.** These twelve rulings are now S5's
+  and S8's design inputs; S5 (§ 3.4, contributing the gate loop) is authored on
+  top of S4's leg under this contract, and the Q5 package-data/composed-assembly
+  seam binds the S5 brief.
