@@ -20,10 +20,11 @@ Topics: openxdox, opendox, front-end, package-boundary, view-registry, slice-s5
 > written by it. What it adds is a measurement of the shell as the S3 view
 > registry actually leaves it, stated as the contract S5 must satisfy. § 8
 > carries the twelve questions a ruling had to settle before S5 starts; each was
-> a point the shell has NOT fixed. **Eleven of the twelve are now RULED** —
+> a point the shell has NOT fixed. **All twelve are now RULED** —
 > Brett Heap, 2026-09-12, amendment #1 (§ 10) — and each is marked at the point
-> it was decided; Q6 stays open, flagged rather than assumed (§ 8, § 10). The
-> measurements below are unchanged by the ruling.
+> it was decided; Q6 by a dedicated correction after the sitting's own closing
+> line was found to have overstated it (§ 8, § 10). The measurements below are
+> unchanged by the ruling.
 
 **Everything measured here was read live on 2026-09-12 at these heads:**
 `opensoft/openDox-code` branch `build/s3-view-registry` (PR
@@ -567,18 +568,20 @@ read. Class B is exempt by construction, which is the boundary working.
 
 ---
 
-## 8. Open questions for Brett Heap — Q1–Q5, Q7–Q12 RULED; Q6 open (amendment #1)
+## 8. Open questions for Brett Heap — Q1–Q12 ALL RULED (amendment #1)
 
 Twelve were asked, each a point the S3 shell had NOT fixed, each carrying a
-RECOMMENDED answer. **Eleven are now RULED** — Brett Heap, 2026-09-12, by
+RECOMMENDED answer. **All twelve are now RULED** — Brett Heap, 2026-09-12, by
 interactive multi-choice, `opensoft/openxFactory#656` comments `5648044785`,
-`5648049748` and `5648065587` — the RECOMMENDED answer adopted in every ruled
-case. **Q6 stays open**: the sitting's closing comment asserts all twelve are
-ruled, but no comment gives Q6 a dedicated bullet, so it is not recorded as
-ruled here (see Q6's own note below). What follows is the as-asked record: the
-measurement and the RECOMMENDED answer stand as first written, and each ruled
-question now also carries the line marking where and when it was decided.
-§ 10 carries the amendment record.
+`5648049748`, `5648065587` and `5649094228` — the RECOMMENDED answer adopted
+in every case. Q6 was the one exception at first: the sitting's closing
+comment (`5648065587`) asserted all twelve were ruled, but that sitting gave
+Q6 (this note's own, on bundle imports) no dedicated bullet — a gap Copilot's
+review of this PR caught independently. `5649094228` corrects that
+overstatement and rules Q6 on its own terms (see Q6's own note below). What
+follows is the as-asked record: the measurement and the RECOMMENDED answer
+stand as first written, and each ruled question now also carries the line
+marking where and when it was decided. § 10 carries the amendment record.
 
 **Q1 — Does the shell MOUNT contributed bindings, or must every one have a named
 reader?** Measured: nothing generic mounts a contributed binding. The tab router
@@ -682,16 +685,13 @@ the contributing column or added to a declared guarantee list by a ruling; the
 `staging-workbench-model.js` names are S4's to resolve first, and `gate.js`
 already shows the import-free posture is achievable.*
 
-**STILL OPEN — not individually ruled.** The sitting's closing comment
-(`opensoft/openxFactory#656` comment `5648065587`) asserts *"All twelve
-counterpart questions ... are now RULED,"* but none of the three comments
-gives Q6 a dedicated bullet or selects among its options the way Q1–Q5 and
-Q7–Q12 each were. Recording it RULED on that blanket line alone would let an
-implementer treat `./views/helpers.js` as the settled import guarantee
-without Brett having actually picked it here; amendment #1 (§ 10) leaves Q6
-open pending a dedicated ruling rather than assume the blanket line covers
-it. The RECOMMENDED answer above is unchanged and remains the standing
-recommendation until then.
+**RULED — the RECOMMENDED answer adopted.** Brett Heap, 2026-09-12,
+opensoft/openxFactory#656 comment 5649094228, by interactive multi-choice.
+*This is a dedicated ruling, not the blanket closing line in `5648065587` —
+that sitting's closing comment named the BOUNDARY note's Q6 (the S8
+re-destination form, ruled separately at `5648044785`), not this note's own
+Q6; `5649094228` corrects the overstatement and rules this Q6 on its own
+terms (§ 10).*
 
 **Q7 — Where does a contributed binding's CSS live?** Measured: every class-B
 selector sits in openDox's `styles.css` — `.viewer-gate` :771, `.gatebar*`
@@ -795,27 +795,36 @@ the error did and did not damage.
 
 ## 10. Amendments
 
-**Amendment #1 — 2026-09-12 — § 8's twelve open questions: eleven RULED, one
-left open.** Brett Heap ruled eleven of the twelve, by interactive
-multi-choice, in one sitting on `opensoft/openxFactory#656`, across three
-comments:
+**Amendment #1 — 2026-09-12 — § 8's twelve open questions: ALL TWELVE
+RULED.** Brett Heap ruled all twelve, by interactive multi-choice, across
+four comments on `opensoft/openxFactory#656` — three in one sitting and a
+fourth, corrective one after this PR's third Copilot review:
 [`5648044785`](https://github.com/opensoft/openxFactory/issues/656#issuecomment-5648044785)
 (Q1, Q3, Q5, and separately the boundary note's own Q6 — a different document's
 question of the same number, not this note's),
 [`5648049748`](https://github.com/opensoft/openxFactory/issues/656#issuecomment-5648049748)
-(Q2, Q4, Q7, Q8), and
+(Q2, Q4, Q7, Q8),
 [`5648065587`](https://github.com/opensoft/openxFactory/issues/656#issuecomment-5648065587)
-(Q9, Q10, Q11, Q12, and its own closing line asserting all twelve are ruled).
+(Q9, Q10, Q11, Q12, and a closing line that OVERSTATED coverage of this
+note's own Q6 — see below), and
+[`5649094228`](https://github.com/opensoft/openxFactory/issues/656#issuecomment-5649094228)
+(Q6, this note's own, on bundle imports, correcting that overstatement).
 
-- **Q6 is the exception, and it is left open on purpose.** That closing line
-  in `5648065587` says *"All twelve counterpart questions ... are now
-  RULED,"* but none of the three comments gives this note's own Q6 (bundle
-  imports) a dedicated bullet or selects among its options the way Q1–Q5 and
-  Q7–Q12 each were — Copilot's review of this PR caught the same gap
-  independently. Recording Q6 as RULED on the blanket line alone would let
-  an implementer treat it as settled when Brett has not actually picked an
-  option here, so § 8 Q6 stays marked open, and this amendment's title says
-  eleven, not twelve.
+- **Q6 was the exception, and is now corrected.** `5648065587`'s closing
+  line says *"All twelve counterpart questions ... are now RULED,"* but none
+  of the sitting's three comments gave this note's own Q6 (bundle imports) a
+  dedicated bullet or selected among its options the way Q1–Q5 and Q7–Q12
+  each were — Copilot's third review of this PR (discussion `r3997363266`,
+  thread `PRRT_kwDOUPv77M6hzBPy`) caught the same gap independently and
+  disputed the "left open" framing this amendment first recorded, asking
+  either for Q6 to be ruled or for an explicit correction. `5649094228` —
+  **CORRECTION + RULING, 2026-09-12, by interactive multi-choice** —
+  supplies both: it names what `5648065587`'s closing line actually
+  overstated (that line closed the BOUNDARY note's Q6, the S8 re-destination
+  form, ruled separately at `5648044785` — not this note's), and it rules
+  this note's own Q6 on its own terms: **a contributed module may import
+  `./views/helpers.js` and nothing else.** § 8 Q6 now reads RULED, citing
+  `5649094228`; the amendment title above reads ALL TWELVE.
 - **What changed.** § 8: each of Q1–Q5 and Q7–Q12 gained a `RULED` line
   naming the ruling and its comment id; Q6 gained an explicit open note
   instead. §§ 1–6: every place that framed one of the eleven ruled questions
@@ -853,9 +862,9 @@ question of the same number, not this note's),
 - **What did not change.** The `Status: draft` header, the § 8 questions'
   MEASURED/RECOMMENDED text (kept verbatim as the as-asked record), and every
   citation's underlying line numbers and shas.
-- **Consequences, per the ruling comments.** These eleven rulings are now
+- **Consequences, per the ruling comments.** These twelve rulings are now
   S5's and S8's design inputs; S5 (§ 3.4, contributing the gate loop) is
   authored on top of S4's leg under this contract, and the Q5
-  package-data/composed-assembly seam binds the S5 brief. Q6 needs a
-  follow-up ruling before S5 can rely on an import guarantee beyond
-  `./views/helpers.js`.
+  package-data/composed-assembly seam binds the S5 brief. S5 can now also
+  rely on Q6's import guarantee as settled: `./views/helpers.js` and
+  nothing else.
