@@ -825,21 +825,27 @@ note's own Q6 — see below), and
   this note's own Q6 on its own terms: **a contributed module may import
   `./views/helpers.js` and nothing else.** § 8 Q6 now reads RULED, citing
   `5649094228`; the amendment title above reads ALL TWELVE.
-- **What changed.** § 8: each of Q1–Q5 and Q7–Q12 gained a `RULED` line
-  naming the ruling and its comment id; Q6 gained an explicit open note
-  instead. §§ 1–6: every place that framed one of the eleven ruled questions
-  as still open or undecided — the mount pass (Q1), the `requires` refusal
-  semantics (Q4, § 1 and § 4.4), the mount-signature count (Q3, § 3), the
-  STABLE/UNSETTLED cross-reference (Q3/Q4, § 3), the unhosted `shell` regions
-  (Q9, § 2.1), the unmet-`requires` refusal row and the snapshot-defect
-  framing (Q4/Q11, § 5), the gate.js exports/bytes/CSS trio (Q2/Q5/Q7, § 6.1),
-  the page-level host and the computed route (Q8/Q12, § 6.2), and the
-  `firstEditTransport` shape (Q10, § 6.4) — was restated as settled, with the
-  ruling cited in place. Nothing was restated for Q6. The measurements
-  themselves (what the S3 shell actually does today) are untouched; only what
-  was said to be open moved to what is now decided. § 9's "None" stands:
-  nothing here corrects an error, every RECOMMENDED answer this note already
-  carried was adopted as written.
+- **What changed, at this amendment's original commit.** § 8: each of Q1–Q5
+  and Q7–Q12 gained a `RULED` line naming the ruling and its comment id; Q6
+  gained an explicit open note instead — superseded by the Q6 bullet above,
+  so § 8 now reads Q1–Q12 RULED throughout. §§ 1–6: every place that framed
+  one of those eleven questions as still open or undecided — the mount pass
+  (Q1), the `requires` refusal semantics (Q4, § 1 and § 4.4), the
+  mount-signature count (Q3, § 3), the STABLE/UNSETTLED cross-reference
+  (Q3/Q4, § 3), the unhosted `shell` regions (Q9, § 2.1), the
+  unmet-`requires` refusal row and the snapshot-defect framing (Q4/Q11, § 5),
+  the gate.js exports/bytes/CSS trio (Q2/Q5/Q7, § 6.1), the page-level host
+  and the computed route (Q8/Q12, § 6.2), and the `firstEditTransport` shape
+  (Q10, § 6.4) — was restated as settled, with the ruling cited in place. §§
+  1–6 carry no Q6-specific prose at all — Q6's only textual home in this
+  note is § 8 — so there was nothing to restate there for Q6, then or since.
+  The measurements themselves (what the S3 shell actually does today) are
+  untouched throughout; only what was said to be open moved to what is now
+  decided. § 9's "None" stands for THIS NOTE'S own assertions: nothing here
+  has ever corrected an error this note made, and every RECOMMENDED answer
+  it already carried — Q6's included — was adopted as written. What
+  `5649094228` corrects is `5648065587`'s own closing line, on the issue
+  thread, not anything this note asserted.
 - **Fix round 1 (same PR, after Copilot's first review)** sharpened two of
   the new restatements: the Q9 note no longer says a `shell`-region binding
   "mounts into nothing" — it now separates the two true facts (Q1's mount
@@ -848,7 +854,9 @@ note's own Q6 — see below), and
   thirteenth region, `page-overlay`, not yet in the measured twelve), matched
   in the README's doc-index row.
 - **Fix round 2 (same PR, after Copilot's second review)** made three more
-  corrections: reversed Q6 from RULED to open (above); reworded the Q4
+  corrections: reversed Q6 from RULED to open, pending a dedicated ruling
+  (subsequently supplied by `5649094228` — see the Q6 bullet above);
+  reworded the Q4
   restatements so "empties the region" cannot be read as clearing a SHARED
   region against § 2.2's no-emptying rule — a binding with an unmet optional
   `requires` contributes no content of its own, nothing else in the region is
