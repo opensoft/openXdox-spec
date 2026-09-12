@@ -837,8 +837,10 @@ note's own Q6 — see below), and
   the gate.js exports/bytes/CSS trio (Q2/Q5/Q7, § 6.1), the page-level host
   and the computed route (Q8/Q12, § 6.2), and the `firstEditTransport` shape
   (Q10, § 6.4) — was restated as settled, with the ruling cited in place. §§
-  1–6 carry no Q6-specific prose at all — Q6's only textual home in this
-  note is § 8 — so there was nothing to restate there for Q6, then or since.
+  1–6 carry no Q6-specific SETTLED/RULING prose to restate (§§ 6.1–6.4's own
+  bundle-import MEASUREMENT rows are untouched by this amendment, same as
+  every other measurement) — Q6's only settled-wording home is § 8 — so
+  there was nothing to restate there for Q6, then or since.
   The measurements themselves (what the S3 shell actually does today) are
   untouched throughout; only what was said to be open moved to what is now
   decided. § 9's "None" stands for THIS NOTE'S own assertions: nothing here
