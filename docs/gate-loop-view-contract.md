@@ -78,8 +78,14 @@ assumed:
 1. **Nothing mounts a contributed binding.** The tab router mounts only bindings
    that declared a `control` (`app.js`:656), and a contributed entry declaring
    one is refused where the payload is read
-   (`views/view_extension.js`:322–332). The only contributed mount in the shell
-   is `resolveView(views, "gate.bar")` at one named call site (`app.js`:980).
+   (`views/view_extension.js`:322–332). The one place the shell mounts through
+   the CONTRIBUTED-SHAPED path at all is `resolveView(views, "gate.bar")` at a
+   single named call site (`app.js`:980) — and at this head that call resolves a
+   binding still in the CORE arm and marked TRANSITIONAL there
+   (`app.js`:590–599). S5 deletes that entry and the identical binding arrives
+   through `contributedViewBindings()`, at which point the call site becomes the
+   shell's only contributed mount and it is still BY ID, not generic: a second
+   contributed binding would need a second openDox call site.
 2. **Nothing publishes a manifest.** `view_manifest`, `host_view_extensions` and
    `collect_view_bindings` have ZERO callers anywhere under `src/` outside the
    module that defines them (swept at `a497d715`). The server-side hop is
@@ -305,10 +311,27 @@ intention the shell does not act on.
 
 ## 5. The refusal text
 
-Every refusal the seam composes today, quoted, with what a contributed binding
-may rely on. All are `ViewBindingError` (`views/view_extension.js`:100–105;
+**Scope: the ASSEMBLY-AND-RESOLVE path** — the refusals a contributing column
+meets when its binding is collected, looked up, loaded and mounted. All are
+`ViewBindingError` (`views/view_extension.js`:100–105;
 `view_extension.py`:217–225): one class for every declaration defect, because
 *"a caller does nothing different for any of them"*.
+
+**The table below is NOT the seam's every refusal, and saying so is the point.**
+A second family sits upstream of it — the per-field DECLARATION-SHAPE refusals a
+binding's own author meets at construction: the id grammar, the entry grammar
+and its dunder guard, the `view_class` membership, and the type of `routes`,
+`requires` and `optional`. They are enumerated at `view_extension.py`:258–333 and
+mirrored field for field at `views/view_extension.js`:122–193 — including the two
+the S3 review added, the type-before-membership order on `region` and
+`view_class` (`view_extension.py`:264–275) and the one compiled `_ENTRY` pattern
+both halves share rather than each asking its own language what an identifier is
+(:204–214). They are not repeated here because a column meets them before it
+ships, whereas the eleven below are what a DEPLOYED assembly can still refuse.
+Two further refusal families are tabled elsewhere in this note: the manifest-shape
+refusals at § 4.2, and the non-conforming-extension refusals
+(`view_extension.py`:475–497, `views/view_extension.js`:241–250) which belong to
+whoever ASSEMBLES the shell rather than to a contributing column.
 
 | # | when | the text, quoted | where |
 |---|---|---|---|
@@ -485,10 +508,12 @@ answer, and **none of them is written above as decided.**
 **Q1 — Does the shell MOUNT contributed bindings, or must every one have a named
 reader?** Measured: nothing generic mounts a contributed binding. The tab router
 mounts only bindings that declared a `control` (`app.js`:656) and a contributed
-entry declaring one is refused (`views/view_extension.js`:322–332); the single
-contributed mount in the shell is `resolveView(views, "gate.bar")` by id at
-`app.js`:980. So a column can contribute a binding today and have nothing ever
-call it.
+entry declaring one is refused (`views/view_extension.js`:322–332); the one
+contributed-shaped mount is `resolveView(views, "gate.bar")` BY ID at
+`app.js`:980, and at this head it resolves the transitional CORE-arm binding
+(`app.js`:590–599), not a contributed one. Either way the mechanism is the same:
+one openDox call site per binding, named in openDox's own source. So a column
+can contribute a binding today and have nothing ever call it.
 **RECOMMENDED: a generic mount pass.** After `collectViewBindings`, the shell
 mounts every contributed binding whose region is `dom` into that region's host,
 in declaration order, and leaves `shell` regions caller-driven. *Without it every
