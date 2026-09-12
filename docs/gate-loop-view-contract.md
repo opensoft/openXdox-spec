@@ -140,8 +140,16 @@ for one is a caller error rather than an absence"*.
 
 **§ 8 Q9 — RULED, amendment #1 (§ 10):** both declared `shell` regions stand.
 `wheel-intent` and `dispose-intent` stay declared in both halves, recorded here
-as unhosted and unread today; a contributed binding naming either now mounts
-into nothing, written down rather than left to be discovered.
+as unhosted and unread today. Q1's generic mount pass never reaches either —
+it walks `dom` regions only — so a binding naming one is not auto-mounted; and
+because `regionHost()` REFUSES for a `shell` region (above), a caller that does
+try to resolve one gets that refusal, not a silent no-op. Both facts are now
+written down rather than left to be discovered.
+
+**§ 8 Q8 — RULED, amendment #1 (§ 10):** a thirteenth region overall,
+`page-overlay` (the fourth of kind `shell`), is added by the ruling for S5 to
+declare — it is not yet in the table above, which still measures the S3 head's
+twelve. § 6.2 has the detail.
 
 ### 2.2 What the host element guarantees — and what it does not
 
@@ -450,10 +458,11 @@ the reason the student install fails to load rather than 404s. S5 must convert
 that import to the `intent-binding.js` shape or a registry lookup, or the "no
 404" promise is a module-graph failure instead.
 
-**The page-level host is also settled.** § 8 Q8 — RULED, amendment #1 (§ 10):
-a fourth `shell` region, `page-overlay`, is the declared host for page-level
-panels; `ensurePanel()`'s reach into `document.body` above is the exact case
-the ruling ends.
+**The page-level host is also settled — see § 2.1's cross-reference too.**
+§ 8 Q8 — RULED, amendment #1 (§ 10): a thirteenth region, `page-overlay` (kind
+`shell`), is what the ruling adds as the host for page-level panels — not yet
+in § 2.1's table, which still measures the S3 head's twelve; `ensurePanel()`'s
+reach into `document.body` above is the exact case the ruling ends.
 
 ### 6.3 `views/swb-create.js` — 372 lines
 
