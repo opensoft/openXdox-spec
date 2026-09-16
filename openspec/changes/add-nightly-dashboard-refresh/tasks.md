@@ -209,3 +209,15 @@ receiving change in this corpus.
       uses that one reference for the credential scope, so the push target and
       the credential scope are the same named thing rather than two phrasings a
       realization must reconcile.
+
+**RE-RAISED at `e55a398`, and the register held.** That review returned FOUR
+readings of the carried text — the incomplete push target (5.9), the validator
+that cannot run (5.7), the status artifact's `source_revision` on outcomes that
+generate no snapshot (5.6), and the parked pull request's nightly churn (5.8) —
+all four marked "previously missed", i.e. found in text no round had changed. Each
+was already a box here before that review ran, and each is § 2.1's business for
+the reason this section's preamble gives. They are recorded as re-raised so a
+later round reads them as answered rather than new, and so the count of open
+readings of the carried text stays FOUR rather than growing by restatement. The
+fifth finding of that review was about this proposal's own front matter, not the
+carried text, and was fixed there.

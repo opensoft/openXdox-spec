@@ -2,7 +2,7 @@
 Status: draft
 Re-homed-from: openxFactory `openspec/changes/add-nightly-dashboard-refresh`, closed as re-homed 2026-09-16 under RULING Q6
 Ratified-in-openxFactory: ratified 2026-08-25 and re-ratified 2026-09-04 (Brett Heap, in session: "ratify add-nightly-dashboard-refresh against its own record")
-code_surface: openXdox-code (the refresh lane and the served plane's baked artifacts), plus the aggregation-side artifact-only worker, WHICH STAYS IN THE AGGREGATION (`split-opendox-two-layer-product` `tasks.md` § 6.1) and is named here as a dependency rather than as a surface this change moves
+code_surface: opensoft/openXdox-code (the refresh lane and the served plane's baked artifacts), plus the aggregation-side artifact-only worker, WHICH STAYS IN THE AGGREGATION (`opensoft/openxFactory` `openspec/changes/split-opendox-two-layer-product/tasks.md` § 6.1) and is named here as a dependency rather than as a surface this change moves
 ---
 
 # Proposal: add-nightly-dashboard-refresh
