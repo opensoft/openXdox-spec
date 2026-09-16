@@ -78,6 +78,18 @@ text and all of them § 2.1's business: 5.6, 5.7 and 5.8 below. The same round
 also found that 5.2 CONTRADICTED the requirement it tracks, which is a defect in
 this ledger rather than in the carriage — corrected in the box itself.
 
+Its review at `a082aca` raised three. One is a real gap in the carried text and
+is registered as 5.9 below. One was the same class of ledger defect as before —
+5.2's narrowing, written in the previous round, had overshot the correction it
+was making — and is widened in the box itself. The third was about a claim in
+the PULL REQUEST's own description rather than about any file, and is fixed
+there: the description called this *"the first OpenSpec change ever authored in
+this corpus"*, which is false. This corpus has carried an OpenSpec change since
+2026-09-11 — `openspec/changes/archive/2026-09-11-add-openxdox-projection-surfaces`
+— and promoted it to `openspec/specs/openxdox-projection-surfaces`. The true
+claim, and the one § 8.5 actually needs, is that this is the first RE-HOMED
+receiving change in this corpus.
+
 - [ ] 5.1 **The baked-input PATH SCOPE is not normatively fixed**
       (`specs/openxdox-refresh-lane/spec.md`, the no-change predicate). One run
       may record scope A and the next use scope B, and a change inside A can
@@ -104,7 +116,19 @@ this ledger rather than in the carriage — corrected in the box itself.
       permanently unrefreshed). A task ledger that reports a settled obligation
       as open is the same defect as one reporting an option as owed, and it
       would have sent the re-authoring to write a rule that already exists.
-      What remains open is the GRAMMAR alone.
+      **WIDENED 2026-09-16, on Copilot's reading of `a082aca`, because the
+      narrowing overshot.** What remains open is the RECORD SHAPE, which is two
+      things and not one: the KEY NAMES, and the ASSOCIATION of each recorded
+      revision with the pin it sits beside. The second is SEMANTIC, not grammar.
+      Two realizations could agree on every key name, emit records a common
+      parser accepts, and still disagree about which of the two revisions the
+      `digest:` beside them was built from — and the no-change comparison would
+      then read a well-formed record and reach the wrong answer. Calling the
+      residue "the grammar alone" would have let § 2.1 fix a parser and leave
+      that ambiguity standing, which is the same failure this box was opened to
+      prevent. The box's own opening sentence had it right — *"without fixing
+      key names or the association to the pin"* — and the narrowing contradicted
+      it two paragraphs later.
 - [ ] 5.3 **The fallback-staleness bound names no duration and no authoritative
       setting** (`specs/ideation-dashboard/spec.md`), so a conformant
       implementation may choose an arbitrarily long rebake interval. The
@@ -162,3 +186,26 @@ this ledger rather than in the carriage — corrected in the box itself.
       whether the preflight consults the OPEN pull request's candidate provenance
       before deciding, or whether a stuck chain suppresses the rebuild until it
       clears.
+- [ ] 5.9 **The normative PUSH TARGET names the registry HOST, not the image
+      REPOSITORY.** The refresh-lane requirement says the child SHALL *"push to
+      `acropensoftxfactoryqa.azurecr.io` under a date-stamped tag"*
+      (`specs/openxdox-refresh-lane/spec.md`, the lane requirement). A registry
+      host is not a push target: an image reference is `<registry>/<repository>:<tag>`,
+      so a conforming implementation is free to publish into ANY repository of
+      that registry and still satisfy the sentence. MEASURED, so the gap is not
+      theoretical: the realization that travelled with this packet pushes to
+      `acropensoftxfactoryqa.azurecr.io/ideation-dashboard`
+      (`DEFAULT_IMAGE`, openxFactory `scripts/ideation_dashboard/dashboard_refresh_lane.py:154`
+      — identical at the frozen source `cb2d3a2c` and at today's `main`), and
+      the SAME document already presumes that repository three times over: the
+      pin diff is scoped to *"the `ideation-dashboard` entry inside the `images:`
+      block"*, the authority requirement scopes the credential to *"the single
+      image repository"*, and the boundary paragraph spells it *"the single
+      `ideation-dashboard` IMAGE repository"*. So the normative sentence is the
+      one place in the requirement where the repository half went missing, and a
+      reader who implements from the SHALL alone can push somewhere the
+      credential does not even reach. **§ 2.1's business**: the re-authoring
+      states the push target as the complete repository-plus-tag reference and
+      uses that one reference for the credential scope, so the push target and
+      the credential scope are the same named thing rather than two phrasings a
+      realization must reconcile.
