@@ -73,6 +73,11 @@ inputs to § 2.1** and are listed as such; the fifth was a misreading and is
 recorded as answered rather than dropped, so it is not re-raised in the next
 round as though it were new.
 
+Its review at `cba3b46` raised three more, all of them real gaps in the carried
+text and all of them § 2.1's business: 5.6, 5.7 and 5.8 below. The same round
+also found that 5.2 CONTRADICTED the requirement it tracks, which is a defect in
+this ledger rather than in the carriage — corrected in the box itself.
+
 - [ ] 5.1 **The baked-input PATH SCOPE is not normatively fixed**
       (`specs/openxdox-refresh-lane/spec.md`, the no-change predicate). One run
       may record scope A and the next use scope B, and a change inside A can
@@ -83,12 +88,23 @@ round as though it were new.
       of openxFactory's tree shape.
 - [ ] 5.2 **The provenance record has no declared GRAMMAR** — the requirement
       asks for a stable machine-readable key/value comment the NEXT run parses,
-      without fixing key names, the association to the pin, or the behaviour on
-      a parse failure. Two realizations can emit incompatible comments and make
-      different refresh decisions. **§ 2.1's business** for the same reason, and
-      the parse-failure arm has a default already stated in the packet's own
-      prose (absent or unparseable provenance counts as CHANGED and bootstraps),
-      which the re-authoring should raise into the requirement.
+      without fixing key names or the association to the pin. Two realizations
+      can emit incompatible comments and make different refresh decisions.
+      **§ 2.1's business** for the same reason as 5.1.
+      **NARROWED 2026-09-16, on Copilot's reading of `cba3b46`, and the narrowing
+      is a correction rather than a scope cut.** This box also listed "the
+      behaviour on a parse failure" as unfixed, and then said a page later that
+      the packet's *prose* supplies a default. Both halves were wrong in the same
+      direction: the behaviour is fixed, and it is fixed in the REQUIREMENT, not
+      in prose around it — `specs/openxdox-refresh-lane/spec.md:51`, *"Provenance
+      that is ABSENT or unparseable … SHALL be treated as CHANGED: the lane
+      builds once, and the pin it produces establishes the provenance every later
+      run reads."* That is a normative SHALL with its own stated reason (failing
+      open costs one redundant build; failing closed leaves a hand-pinned plane
+      permanently unrefreshed). A task ledger that reports a settled obligation
+      as open is the same defect as one reporting an option as owed, and it
+      would have sent the re-authoring to write a rule that already exists.
+      What remains open is the GRAMMAR alone.
 - [ ] 5.3 **The fallback-staleness bound names no duration and no authoritative
       setting** (`specs/ideation-dashboard/spec.md`), so a conformant
       implementation may choose an arbitrarily long rebake interval. The
@@ -111,3 +127,38 @@ round as though it were new.
       serving host]" — and the `THEN` names the remedy in the same breath (the
       lane proposes a digest pin; the install layer applies it). The clause is
       byte-identical to openxFactory's ratified text and is not defective.
+- [ ] 5.6 **The status artifact REQUIRES a field two of its own outcomes cannot
+      produce.** The outcome requirement (`specs/openxdox-refresh-lane/spec.md`)
+      lists `skipped` and `no-change` among the outcomes it must distinguish, and
+      in the same sentence requires every recorded outcome to carry "the snapshot
+      `source_revision`". A no-change run stops BEFORE snapshot generation and a
+      readiness skip can stop before any snapshot has ever existed — on a first
+      run there is not even a previous pin to copy from. So the payload the
+      requirement demands is unproducible for exactly the two outcomes it was
+      written to make auditable. **§ 2.1's business**: the re-authoring states
+      whether the field is omitted, carried from the previously pinned image, or
+      represented as explicitly unavailable — and the third is the only one of
+      the three that cannot be mistaken for a fresh reading.
+- [ ] 5.7 **A validator that could not RUN has no output to record.** The
+      strict-validation refusal requires the lane to "record the failure with the
+      validator's own output". A validator that fails to EXECUTE — missing,
+      uninstallable, killed — produces no such output, so the requirement's own
+      remedy is undefined in the one case where the diagnostic matters most.
+      **§ 2.1's business**: the re-authoring distinguishes a validation FAILURE
+      from a validator-EXECUTION failure and names what the artifact carries for
+      the second. The publish-nothing half needs no change and must not be
+      weakened by the fix: both cases publish nothing.
+- [ ] 5.8 **A PARKED pull request can make the lane churn nightly.** The
+      authoritative provenance is read from the served plane's DEFAULT branch, so
+      while a pin pull request sits open and unmerged the recorded revisions do
+      not move. With no new inputs the next run still reads the old provenance,
+      decides CHANGED, rebuilds, and — because these image builds are explicitly
+      non-reproducible, which the packet itself argues at length — pushes a new
+      digest and advances it into the same open pull request. Every night, for as
+      long as the review is parked. The packet ALREADY names the condition, in
+      the outcome requirement's last sentence: an unmerged pin on a fixed branch
+      "SHALL be reportable as a stuck chain". It makes it reportable and does not
+      make it stop the rebuild. **§ 2.1's business**: the re-authoring says
+      whether the preflight consults the OPEN pull request's candidate provenance
+      before deciding, or whether a stuck chain suppresses the rebuild until it
+      clears.
